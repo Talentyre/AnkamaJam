@@ -7,10 +7,10 @@ Voici les instructions d'installation, si vous avez un souci, n'hésitez pas à 
 **Unity 2017** : https://store.unity.com/fr/download?ref=personal (assurez-vous que c'est bien la Unity 2017.2.0f3)
 Moteur de jeu et éditeur que nous utiliserons, **tout le monde** doit l'installer ! Une fois les conditions d'utilisation acceptées, vous devez cocher les composants à installer suivants : Unity 2017.2.0f3, MonoDevelop / UnityDebugger, Standard Assets, Android Build Support et iOS Build Support (au cas où on fait du mobile). Si vous voulez beaucoup coder : Microsoft Visual Studio Community 2017, et dans ce cas décochez MonoDevelop.
 
-**Git** : Pour GIT, on vous laisse le choix du client, mais si vous ne savez pas, prenez **SourceTree** : https://www.sourcetreeapp.com/
+**Git** : Pour GIT, tout le monde installe au moins **SourceTree**, en cas de conflits c'est plus pratique : https://www.sourcetreeapp.com/
 
-Autres clients : 
-- **TortoiseGit** https://tortoisegit.org/download/
+Autres clients additionnels : 
+- **TortoiseGit** https://tortoisegit.org/download/ : Pour ceux qui ont l'habitude de TortoiseSVN
 - **GitHub Desktop** https://desktop.github.com/
 
 Pour récupérer le projet, il faut le cloner, ayant moi-même des soucis pour installer sourcetree à cause de leur gestion de compte toute pourrie, je vais pas pouvoir vous aider, mais je suis sûr qu'Olivier se fera un plaisir de faire un petit brief :stuck_out_tongue: !
