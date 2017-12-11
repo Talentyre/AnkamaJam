@@ -118,6 +118,8 @@ public class StartOptions : MonoBehaviour {
 		animMenuAlpha.SetTrigger ("fade");
 		Invoke("HideDelayed", fadeAlphaAnimationClip.length);
 		Debug.Log ("Game started in same scene! Put your game starting stuff here.");
+		
+		SceneHandler.Instance.Load(SceneHandler.Game);
 	}
 
 
