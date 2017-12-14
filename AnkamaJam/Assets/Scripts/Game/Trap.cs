@@ -1,40 +1,38 @@
 ﻿using UnityEngine;
-using UnityEditor;
 
 using System.Collections.Generic;
-using System.Linq;
 
 public class Trap : MonoBehaviour
 {
-	private int Level;
+	private int m_level;
 	private TrapModel m_model;
 
-	private float ActTimer;
-	public float TimeActivation;
-	private bool Active;
+	private float m_lastActivation;
 
     private Vector2Int m_position;
 	private List<Vector2Int> m_activationPositions;
 
+    public void Init(TrapModel model)
+    {
+        m_model = model;
+        m_lastActivation = Time.realtimeSinceStartup;
+    }
 
-	public void Update(){
-		ActTimer += Time.deltaTime;
-	}
+    public TrapModel Model { get { return m_model; } }
+
     public void Act()
     {
-		if (ActTimer >= TimeActivation) {
-			Active = true;
-		}
+        if (m_lastActivation + m_model.Cooldown <= Time.realtimeSinceStartup)
+        {
+            IEnumerable<CharacterBehaviour> charactersInTrap = GameSingleton.Instance.GetCharactersAt(m_activationPositions);
+            foreach (var characterBehaviour in charactersInTrap)
+            {
+                m_model.Activate(characterBehaviour);
+            }
 
-		if (Active == true) {
-			ActTimer = 0;
-		}
-
-		IEnumerable<CharacterBehaviour> charactersInTrap = GameSingleton.Instance.GetCharactersAt (m_activationPositions);
-	    foreach (var characterBehaviour in charactersInTrap)
-	    {
-		    m_model.Activate (characterBehaviour);
-	    }
+            m_lastActivation = Time.realtimeSinceStartup;
+        }
+		
 	}
     
 }
