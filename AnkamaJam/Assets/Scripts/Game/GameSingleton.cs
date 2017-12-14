@@ -10,6 +10,7 @@ public class GameSingleton : MonoBehaviour
 
     public GridInformation GridInformation;
     public CharacterSpawner CharacterSpawner;
+    public GridLayout GridLayout;
 
     public float LogicFps = 30;
     
@@ -47,8 +48,6 @@ public class GameSingleton : MonoBehaviour
     
     public void GameLoop()
     {
-        Debug.Log("GameLoop");
-
         var spawnedCharacters = CharacterSpawner.SpawnCharacterLoop();
         m_characters.AddRange(spawnedCharacters);
 
