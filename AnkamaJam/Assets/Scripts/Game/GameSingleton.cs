@@ -86,7 +86,7 @@ public class GameSingleton : MonoBehaviour
     
     public Vector3Int[] GetTrapPositions()
     {
-        return GridInformation.GetAllPositions(TilemapProperty.MovingSidewalkProperty);
+        return GridInformation.GetAllPositions(TilemapProperty.TrapProperty);
     }
 
     public Vector3Int[] GetSpawnPosition()

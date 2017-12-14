@@ -16,6 +16,9 @@ public class TrapManager : MonoBehaviour
             return list;
 
         var positions = GameSingleton.Instance.GetTrapPositions();
+        if (positions.Length == 0)
+            return list;
+
         for (int i = 0; i < 10; i++)
         {
             var trapIndex = Helper.random(m_traps.Count);
