@@ -19,7 +19,7 @@ public class TrapManager : MonoBehaviour
         if (positions.Length == 0)
             return list;
 
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 5; i++)
         {
             var trapIndex = Helper.random(m_traps.Count);
             var positionIndex = Helper.random(positions.Length);
