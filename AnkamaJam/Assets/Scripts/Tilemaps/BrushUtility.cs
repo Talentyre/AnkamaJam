@@ -38,12 +38,12 @@ public class BrushUtility
 		return grid.GetComponent<GridInformation>();
 	}
 	
-	public static GridInformation GetRootGridInformation(bool autoCreate)
+	public static GridInformation GetRootGridInformation(bool autoCreate, Grid grid = null)
 	{
-		Grid grid = GetRootGrid(autoCreate);
-		GridInformation info = grid.GetComponent<GridInformation>();
+        Grid g = grid ?? GetRootGrid(autoCreate);
+		GridInformation info = g.GetComponent<GridInformation>();
 		if (info == null)
-			info = grid.gameObject.AddComponent<GridInformation>();
+			info = g.gameObject.AddComponent<GridInformation>();
 		return info;
 	}
 
