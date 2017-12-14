@@ -19,15 +19,14 @@ public class StartBrush : GridBrushBase
     }
 #endif
 
-    public const string m_startLayerName = "HorrorHouseStart";
+    public string m_startLayerName = "HorrorHouseStart";
     public TileBase m_start;
 
     //Paint internal macht wahrscheinlich selber noch kein Tile an die gewünschte Position
     public override void Paint(GridLayout grid, GameObject layer, Vector3Int position)
     {
-        Debug.Log("PAIN !");
         var gridInformation = BrushUtility.GetRootGridInformation(true);
-        Tilemap start = GetStart();
+        Tilemap start = GetTilemap();
 
         if (start != null)
         {
@@ -37,12 +36,23 @@ public class StartBrush : GridBrushBase
         }
     }
 
-    private void PaintInternal(Vector3Int position, Tilemap acid)
+    private void PaintInternal(Vector3Int position, Tilemap map)
     {
-        acid.SetTile(position, m_start);
+        map.SetTile(position, m_start);
     }
 
-    public static Tilemap GetStart()
+    public override void Erase(GridLayout grid, GameObject brushTarget, Vector3Int position)
+    {
+        Tilemap map = GetTilemap();
+        if (map != null)
+        {
+            var gridInformation = BrushUtility.GetRootGridInformation(true, map.layoutGrid);
+            gridInformation.ErasePositionProperty(position, TilemapProperty.StartProperty);
+            map.SetTile(position, null);
+        }
+    }
+
+    private Tilemap GetTilemap()
     {
         GameObject go = GameObject.Find(m_startLayerName);
         return go != null ? go.GetComponent<Tilemap>() : null;

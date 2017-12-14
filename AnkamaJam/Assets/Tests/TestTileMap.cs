@@ -13,10 +13,10 @@ public class TestTileMap : MonoBehaviour
     {
         var gridInformation = BrushUtility.GetRootGridInformation(StartMap.layoutGrid);
 
-        var myPositions = gridInformation.GetAllPositions(TilemapProperty.StartProperty);
+        var myPositions = gridInformation.GetAllPositions(TilemapProperty.MovingSidewalkProperty);
         foreach (var myPosition in myPositions)
         {
-            var positionProperty = gridInformation.GetPositionProperty(myPosition, TilemapProperty.StartProperty, 0);
+            Object positionProperty = gridInformation.GetPositionProperty(myPosition, TilemapProperty.MovingSidewalkProperty, (Object) null);
             Debug.Log("Start positions  = "+myPosition+" ??? "+ positionProperty );
         }
         

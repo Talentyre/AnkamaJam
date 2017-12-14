@@ -21,11 +21,11 @@ public class MovingSidewalkTile : TileBase
     }
 #endif
 
-    public MovingSidewalk m_movingSideWalk;
+    public GameObject m_movingSideWalk;
 
     public override void GetTileData(Vector3Int position, ITilemap tilemap, ref TileData tileData)
     {
-        tileData.sprite = m_movingSideWalk.Sprite;
+        tileData.sprite = m_movingSideWalk.GetComponent<MovingSidewalk>().Sprite;
         tileData.flags = TileFlags.LockAll;
     }
 }

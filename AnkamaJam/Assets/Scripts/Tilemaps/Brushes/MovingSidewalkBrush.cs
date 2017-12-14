@@ -18,6 +18,7 @@ public class MovingSidewalkBrush : GridBrushBase
         AssetDatabase.CreateAsset(mytb, "Assets/Tilemap/Brushes/" + mytb.name + "");
     }
 
+    public string m_layerName = "HorrorHouseMoving";
     public MovingSidewalkTile m_tile;
 
     public override void Paint(GridLayout grid, GameObject layer, Vector3Int position)
@@ -27,8 +28,8 @@ public class MovingSidewalkBrush : GridBrushBase
         {
             var gridInformation = BrushUtility.GetRootGridInformation(true, map.layoutGrid);
             gridInformation.ErasePositionProperty(position, TilemapProperty.MovingSidewalkProperty);
-            gridInformation.SetPositionProperty(position, TilemapProperty.MovingSidewalkProperty, (Object) m_tile.m_movingSideWalk.gameObject);
-
+            gridInformation.SetPositionProperty(position, TilemapProperty.MovingSidewalkProperty, (Object) m_tile.m_movingSideWalk);
+            
             PaintInternal(position, map);
         }
     }
@@ -38,11 +39,21 @@ public class MovingSidewalkBrush : GridBrushBase
         map.SetTile(position, m_tile);
     }
 
-    public static Tilemap GetTilemap()
+    private Tilemap GetTilemap()
     {
-        GameObject go = Selection.activeGameObject;
+        GameObject go = GameObject.Find(m_layerName);
         return go != null ? go.GetComponent<Tilemap>() : null;
     }
 
+    public override void Erase(GridLayout grid, GameObject brushTarget, Vector3Int position)
+    {
+        Tilemap map = GetTilemap();
+        if (map != null)
+        {
+            var gridInformation = BrushUtility.GetRootGridInformation(true, map.layoutGrid);
+            gridInformation.ErasePositionProperty(position, TilemapProperty.MovingSidewalkProperty);
+            map.SetTile(position, null);
+        }
+    }
 #endif
 }
