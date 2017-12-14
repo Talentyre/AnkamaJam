@@ -30,13 +30,11 @@ public class Trap : MonoBehaviour
 			ActTimer = 0;
 		}
 
-		List<CharacterBehaviour> charactersInTrap = GameSingleton.Instance.GetCharactersAt (m_activationPositions);
-		for (int i = 0, size = charactersInTrap; i < size; ++i) {
-			CharacterBehaviour c = charactersInTrap [i];
-			m_model.Activate (c);
-		}
-	
-    	
+		IEnumerable<CharacterBehaviour> charactersInTrap = GameSingleton.Instance.GetCharactersAt (m_activationPositions);
+	    foreach (var characterBehaviour in charactersInTrap)
+	    {
+		    m_model.Activate (characterBehaviour);
+	    }
 	}
     
 }
