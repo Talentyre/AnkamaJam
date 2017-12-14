@@ -11,6 +11,7 @@ public class GameSingleton : MonoBehaviour
     public GridInformation GridInformation;
     public CharacterSpawner CharacterSpawner;
     public GridLayout GridLayout;
+    public TrapManager TrapManager;
 
     public float LogicFps = 30;
     
@@ -20,6 +21,7 @@ public class GameSingleton : MonoBehaviour
         _lastTick = Time.realtimeSinceStartup;
         _tickInterval = 1 / LogicFps;
         CharacterSpawner.Init();
+        m_traps.AddRange(TrapManager.Init());
     }
     
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
@@ -46,7 +48,7 @@ public class GameSingleton : MonoBehaviour
         }
     }
     
-    public void GameLoop()
+   public void GameLoop()
     {
         var spawnedCharacters = CharacterSpawner.SpawnCharacterLoop();
         m_characters.AddRange(spawnedCharacters);
@@ -80,6 +82,11 @@ public class GameSingleton : MonoBehaviour
         if (movingGameObject == null)
             return null;
         return movingGameObject.GetComponent<MovingSidewalk>();
+    }
+    
+    public Vector3Int[] GetTrapPositions()
+    {
+        return GridInformation.GetAllPositions(TilemapProperty.MovingSidewalkProperty);
     }
 
     public Vector3Int[] GetSpawnPosition()
