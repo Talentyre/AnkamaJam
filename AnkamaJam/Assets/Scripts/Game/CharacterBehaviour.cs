@@ -24,6 +24,11 @@ public class CharacterBehaviour : MonoBehaviour
     private Vector2 m_startPosition;
     private Vector2 m_startPositionWithALittleJoke;
 
+    private CharacterStatesEnum m_characterStatesEnum = CharacterStatesEnum.WALKING;
+    private float _nextStaticTime;
+    private const float MinStaticInterval = 5;
+    private const float MaxStaticInterval = 10;
+
 
     //public Vector2? Target { get { return m_target; } }
     // position en cours
@@ -46,6 +51,12 @@ public class CharacterBehaviour : MonoBehaviour
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
+        OnWalk();
+    }
+
+    private void RefreshNextStaticTime()
+    {
+        _nextStaticTime = Time.time + Random.Range(MinStaticInterval, MaxStaticInterval);
     }
 
     public void Init(CharacterModel model, Vector3Int position)
@@ -66,6 +77,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void OnRun()
     {
+        m_characterStatesEnum = CharacterStatesEnum.RUNNING;
         m_speed = m_model.Speed * 2;
         // TODO trouver une target de fuite
         //m_target =
@@ -73,14 +85,37 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void OnWalk()
     {
+        if (m_model == null)
+            return;
+        RefreshNextStaticTime();
+        
+        m_characterStatesEnum = CharacterStatesEnum.WALKING;
         m_animator.SetBool("marche", true);
         m_speed = m_model.Speed;
-        // TODO trouver une target
-        //m_target =
+    }
+
+    public void OnStatic()
+    {
+        if (m_characterStatesEnum == CharacterStatesEnum.STATIC)
+            return;
+        m_characterStatesEnum = CharacterStatesEnum.STATIC;
+        m_animator.SetBool("marche", false);
+        m_speed = m_model.Speed;
+        
+        Invoke("OnWalk",Random.Range(3,5));
     }
 
     public void Move()
     {
+        if (m_characterStatesEnum == CharacterStatesEnum.STATIC)
+            return;
+
+        if (Time.time > _nextStaticTime)
+        {
+            OnStatic();
+            return;
+        }
+        
         if (m_target == null && SelectWalkTarget()) 
             return;
 
