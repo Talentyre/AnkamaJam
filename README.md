@@ -14,3 +14,5 @@ Autres clients additionnels :
 - **GitHub Desktop** https://desktop.github.com/
 
 Pour récupérer le projet, il faut le cloner, ayant moi-même des soucis pour installer sourcetree à cause de leur gestion de compte toute pourrie, je vais pas pouvoir vous aider, mais je suis sûr qu'Olivier se fera un plaisir de faire un petit brief :stuck_out_tongue: !
+
+DISCORD : https://discord.gg/mtvPkxg
