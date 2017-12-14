@@ -18,13 +18,29 @@ public class MovingSidewalk : MonoBehaviour
 
     public Direction PickEntrance()
     {
-        var index = (int)Mathf.Floor(Helper.random(m_entrances.Count + 1));
+        var index = Helper.random(m_entrances.Count);
         return m_entrances[index];
     }
 
     public Direction PickExit()
     {
-        var index = (int)Mathf.Floor(Helper.random(m_entrances.Count + 1));
-        return m_entrances[index];
+        var index = Helper.random(m_exits.Count);
+        return m_exits[index];
+    }
+
+    public static Vector2Int GetVector2IntFromDirection(Direction direction)
+    {
+        switch (direction)
+        {
+            case Direction.East:
+                return Vector2Int.right;
+            case Direction.West:
+                return Vector2Int.left;
+            case Direction.North:
+                return Vector2Int.up;
+            case Direction.South:
+                return Vector2Int.down;
+        }
+        return Vector2Int.down;
     }
 }

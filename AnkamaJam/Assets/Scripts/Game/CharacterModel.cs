@@ -8,7 +8,24 @@ public class CharacterModel : MonoBehaviour
     private int m_maxLife = 1;
 
     public int MaxLife { get { return m_maxLife; } }
+    
+    [SerializeField]
+    private float m_speed = 1f;
 
+    public float Speed { get { return m_speed; } }
+    
+    [SerializeField]
+    private float m_spawnInterval = 1f;
+
+    public float SpawnInterval { get { return m_spawnInterval; } }
+    
+    [SerializeField]
+    private float m_spawnDelay = 1f;
+
+    public float SpawnDelay { get { return m_spawnDelay; } }
+
+    
+    
     // Use this for initialization
     void Start()
     {
