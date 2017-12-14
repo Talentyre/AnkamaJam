@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.Linq;
 
-public class GameSingleton : ScriptableObject
+public class GameSingleton : MonoBehaviour
 {
-    private GameSingleton m_instance;
+    private static GameSingleton m_instance;
 	public static GameSingleton Instance { get { return m_instance; } }
 
+    private void Awake()
+    {
+        m_instance = this;
+    }
+    
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
     private readonly List<Trap> m_traps = new List<Trap>();
 
