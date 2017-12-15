@@ -1,10 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using DG.Tweening;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 public class GameSingleton : MonoBehaviour
 {
@@ -30,16 +32,34 @@ public class GameSingleton : MonoBehaviour
         {
             return _alert;
         }
-        set { _alert = (long) Mathf.Min(_alert, MaxAlert); }
+        set { _alert = (long) Mathf.Min(value, MaxAlert); }
     }
 
-    private const long MaxSouls = 1000;
+    public const long MaxSouls = 100;
     private long _souls;
 
     public long Souls
     {
         get { return _souls; }
-        set { _souls = (long) Mathf.Min(_souls, MaxSouls); }
+        set
+        {
+            _souls = (long) Mathf.Min(value, MaxSouls);
+        }
+    }
+
+    private long _score;
+
+    public long Score
+    {
+        get
+        {
+            return _score;
+        }
+        set
+        {
+            _score = value;
+            OnScoreUpdate(_score);
+        }
     }
     
     public bool IsGameOver { get { return _alert <= 0; } }
@@ -61,6 +81,22 @@ public class GameSingleton : MonoBehaviour
     private float _lastTick;
     private float _tickInterval;
     private bool _gameOverLaunched;
+    public Action<long> OnSoulUpdate;
+    public Action<int> OnComboUpdate;
+    public Action<long> OnScoreUpdate;
+
+    private int _combo;
+    private const float ComboBaseDuration = 5;
+    private float _comboDuration;
+    private int Combo
+    {
+        get { return _combo; }
+        set
+        {
+            _combo = value;
+            OnComboUpdate(_combo);
+        }
+    }
 
     public void OnTrapCell(Vector3Int position)
     {
@@ -98,6 +134,12 @@ public class GameSingleton : MonoBehaviour
         {
             GameLoop();
             _lastTick = Time.realtimeSinceStartup;
+        }
+        if (_comboDuration > 0)
+        {
+            _comboDuration -= Time.deltaTime;
+            if (_comboDuration <= 0)
+                Combo = 0;
         }
     }
     
@@ -171,6 +213,10 @@ public class GameSingleton : MonoBehaviour
     {
         var modelSoul = characterBehaviour.Model.Soul;
         var sourcePosition = characterBehaviour.transform.position;
+
+        Combo++;
+        Score += characterBehaviour.Model.Score * Combo;
+        _comboDuration = ComboBaseDuration;
         
         OnSoulModified(modelSoul, sourcePosition);
     }
@@ -178,6 +224,8 @@ public class GameSingleton : MonoBehaviour
     public void OnSoulModified(int soulDelta, Vector3 sourcePosition)
     {
         Souls += soulDelta;
+        if (OnSoulUpdate != null)
+            OnSoulUpdate(Souls);
 
         var text = (soulDelta >= 0 ? "+ " : "- ") + soulDelta;
         LaunchOverheadFeedback(text, Color.cyan,sourcePosition);

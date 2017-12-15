@@ -51,6 +51,11 @@ public class CharacterModel : MonoBehaviour
 
     public int Soul { get { return m_soul; } }
     
+    [SerializeField]
+    private int m_score = 100;
+
+    public int Score { get { return m_score; } }
+    
     
     
     
