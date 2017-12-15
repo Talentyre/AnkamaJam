@@ -176,7 +176,8 @@ public class CharacterBehaviour : MonoBehaviour
             return;
 
 
-        if (Time.time > _nextStaticTime)
+        if (Time.time > _nextStaticTime && 
+            (m_characterStatesEnum == CharacterStatesEnum.WALKING))
         {
             OnStatic();
             return;
@@ -208,8 +209,16 @@ public class CharacterBehaviour : MonoBehaviour
         var v = m_positionWithALittleJoke + Vector2.one*0.5f;
         transform.position = new Vector3(v.x, v.y, v.y);
 
-        if (Mathf.Approximately(m_movePercentage, 1.0f)) 
-            SelectWalkTarget();
+        if (Mathf.Approximately(m_movePercentage, 1.0f))
+            switch (m_characterStatesEnum)
+            {
+                case CharacterStatesEnum.WALKING:
+                    SelectWalkTarget();
+                    return;
+                case CharacterStatesEnum.RUNNING:
+                    SelectRunTarget(true);
+                    return;
+            }
     }
 
     private void OnTalk()
@@ -270,6 +279,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     private bool SelectRunTarget(bool invertDirection)
     {
+        Debug.Log("SelectRun " + Time.frameCount);
         if (m_fearCounter <= 0)
         {
             OnStopRun();

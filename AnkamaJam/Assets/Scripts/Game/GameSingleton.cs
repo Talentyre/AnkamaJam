@@ -108,7 +108,7 @@ public class GameSingleton : MonoBehaviour
     {
         var trap = m_traps.FirstOrDefault((c) => c.Position.Equals(Helper.ToVector2Int(position)));
         if (trap != null)
-            trap.Act();
+            trap.Act(false);
     }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
