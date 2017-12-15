@@ -79,7 +79,6 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
-        _alert = MaxAlert;
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
