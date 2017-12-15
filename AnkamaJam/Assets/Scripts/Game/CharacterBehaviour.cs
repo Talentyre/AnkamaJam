@@ -37,6 +37,7 @@ public class CharacterBehaviour : MonoBehaviour
     private Object _bloodFxPrefab;
     private Object _deathFxPrefab;
     private int m_fearCounter;
+    private float m_stunEnd;
 
     public CharacterModel Model
     {
@@ -105,10 +106,18 @@ public class CharacterBehaviour : MonoBehaviour
     }
 
 
+    public void OnStun(float duration)
+    {
+        m_characterStatesEnum = CharacterStatesEnum.STUN;
+        m_stunEnd = Time.time + duration;
+        m_target = null;
+    }
+
     public void OnFear(int power)
     {
         m_characterStatesEnum = CharacterStatesEnum.FEAR;
-        m_animator.SetBool("criPeur", true);
+        m_animator.SetTrigger("cri");
+        m_animator.SetInteger("speed", 2);
         m_target = null;
         m_fearCounter = power;
         StartMovementCoroutine(RunAfterFear());
@@ -128,14 +137,13 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void OnStopRun()
     {
-        m_animator.SetBool("criPeur", false);
         OnWalk();
     }
 
     public void OnWalk()
     {
         m_characterStatesEnum = CharacterStatesEnum.WALKING;
-        m_animator.SetBool("marche", true);
+        m_animator.SetInteger("speed", 1);
         m_speed = m_model.Speed;
     }
 
@@ -144,7 +152,7 @@ public class CharacterBehaviour : MonoBehaviour
         if (m_characterStatesEnum == CharacterStatesEnum.STATIC)
             return;
         m_characterStatesEnum = CharacterStatesEnum.STATIC;
-        m_animator.SetBool("marche", false);
+        m_animator.SetInteger("speed", 0);
         m_speed = m_model.Speed;
         
         StartMovementCoroutine(GoToWalk(Random.Range(3,5)));
@@ -173,7 +181,11 @@ public class CharacterBehaviour : MonoBehaviour
             return;
 
         if (m_characterStatesEnum == CharacterStatesEnum.STUN)
+        {
+            if (Time.time > m_stunEnd)
+                m_characterStatesEnum = CharacterStatesEnum.WALKING;
             return;
+        }
 
 
         if (Time.time > _nextStaticTime && 
