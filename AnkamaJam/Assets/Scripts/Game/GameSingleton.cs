@@ -21,16 +21,16 @@ public class GameSingleton : MonoBehaviour
 
     public GameObject OverhadFeedbackPrefab;
 
-    private const long MaxReputation = 100;
-    private long _reputation;
+    private const long MaxAlert = 100;
+    private long _alert;
 
-    public long Reputation
+    public long Alert
     {
         get
         {
-            return _reputation;
+            return _alert;
         }
-        set { _reputation = (long) Mathf.Min(_reputation, MaxReputation); }
+        set { _alert = (long) Mathf.Min(_alert, MaxAlert); }
     }
 
     private const long MaxSouls = 1000;
@@ -42,7 +42,7 @@ public class GameSingleton : MonoBehaviour
         set { _souls = (long) Mathf.Min(_souls, MaxSouls); }
     }
     
-    public bool IsGameOver { get { return _reputation <= 0; } }
+    public bool IsGameOver { get { return _alert <= 0; } }
     
     
     private void Awake()
@@ -53,7 +53,7 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnTrapCell += OnTrapCell;
-        _reputation = MaxReputation;
+        _alert = MaxAlert;
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
@@ -153,7 +153,7 @@ public class GameSingleton : MonoBehaviour
 
     private void OnCharacterVictory(CharacterBehaviour characterBehaviour)
     {
-        Reputation++;
+        Alert++;
         var sourcePosition = characterBehaviour.transform.position;
         
         var text = "Victory !!!";
