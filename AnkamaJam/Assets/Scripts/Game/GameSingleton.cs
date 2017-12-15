@@ -80,6 +80,7 @@ public class GameSingleton : MonoBehaviour
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
         BeginDrag(false);
+        Souls = 5;
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
