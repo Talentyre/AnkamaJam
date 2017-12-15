@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Helper
 {
@@ -33,5 +34,11 @@ public class Helper
         var list = new List<Vector3Int>();
         positions.ForEach((p) => list.Add(ToVector3Int(p)));
         return list;
+    }
+    
+    public static Vector3Int ExtractCellPosition(PointerEventData data)
+    {
+        var screenToWorldPoint = Camera.main.ScreenToWorldPoint(data.position);
+        return GameSingleton.Instance.GridLayout.WorldToCell(screenToWorldPoint);
     }
 }

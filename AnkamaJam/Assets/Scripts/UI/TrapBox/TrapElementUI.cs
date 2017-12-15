@@ -50,7 +50,7 @@ public class TrapElementUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
         if (!_enabled)
             return;
         GameSingleton.Instance.BeginDrag(false);
-        GameSingleton.Instance.RequestSpawnAt(m_model, ExtractCellPosition(eventData));
+        GameSingleton.Instance.RequestSpawnAt(m_model, Helper.ExtractCellPosition(eventData));
         Destroy(m_currentDnD.gameObject);
     }
 
@@ -58,14 +58,8 @@ public class TrapElementUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
     {
         if (!_enabled)
             return;
-        var pos = ExtractCellPosition(eventData);
+        var pos = Helper.ExtractCellPosition(eventData);
         m_currentDnD.transform.position = pos;
-    }
-
-    private Vector3Int ExtractCellPosition(PointerEventData data)
-    {
-        var screenToWorldPoint = Camera.main.ScreenToWorldPoint(data.position);
-        return GameSingleton.Instance.GridLayout.WorldToCell(screenToWorldPoint);
     }
 
 }
