@@ -27,22 +27,28 @@ public class Trap : MonoBehaviour
 
     public TrapModel Model { get { return m_model; } }
 
-    public void Act()
+    public void Act(bool automatic = true)
     {
-        if (m_nextActivation <= Time.realtimeSinceStartup)
-        {
-            IEnumerable<CharacterBehaviour> charactersInTrap = GameSingleton.Instance.GetCharactersAt(m_activationPositions);
-            foreach (var characterBehaviour in charactersInTrap)
-            {
-                m_model.Activate(characterBehaviour);
-            }
+        if (automatic != m_model.Automatic)
+            return;
+        if (IsInCooldown)
+            return;
 
-            m_model.Animator.SetTrigger("TriggerTrap");
-            m_nextActivation = Time.realtimeSinceStartup + m_model.Cooldown;
+        IEnumerable<CharacterBehaviour> charactersInTrap = GameSingleton.Instance.GetCharactersAt(m_activationPositions);
+        foreach (var characterBehaviour in charactersInTrap)
+        {
+            m_model.Activate(characterBehaviour);
         }
-		
+
+        m_model.Animator.SetTrigger("TriggerTrap");
+        m_nextActivation = Time.realtimeSinceStartup + m_model.Cooldown;
 	}
  
+    public bool IsInCooldown
+    {
+        get { return m_model.Cooldown > 0 && m_nextActivation > Time.realtimeSinceStartup; }
+    }
+
     public void OnPurchase()
     {
         GameSingleton.Instance.OnSoulModified(-Model.Souls,transform.position);

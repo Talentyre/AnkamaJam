@@ -78,7 +78,8 @@ public class GameSingleton : MonoBehaviour
         _tickInterval = 1 / LogicFps;
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
-        InputManager.OnTrapCell += OnTrapCell;
+        InputManager.OnCellClick += OnCellClick;
+        _alert = MaxAlert;
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
@@ -104,19 +105,11 @@ public class GameSingleton : MonoBehaviour
         }
     }
 
-    public void OnTrapCell(Vector3Int position)
+    public void OnCellClick(Vector3Int position)
     {
-        /*var pos = new Vector2Int(position.x, position.y);
-        if (!TrapExistsAt(pos))
-        {
-            var trap = TrapManager.SpawnRandomTrap(position);
-            if (trap != null)
-                m_traps.Add(trap);
-        }
-        else
-        {
-            Debug.Log("A trap is already present at the position.");
-        }*/
+        var trap = m_traps.FirstOrDefault((c) => c.Position.Equals(Helper.ToVector2Int(position)));
+        if (trap != null)
+            trap.Act();
     }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class InputManager : MonoBehaviour {
 
-    public event Action<Vector3Int> OnTrapCell;
+    public event Action<Vector3Int> OnCellClick;
 
 	// Use this for initialization
 	void Start () {
@@ -20,12 +20,7 @@ public class InputManager : MonoBehaviour {
 			//var vector3Int = new Vector3Int(Mathf.RoundToInt(screenToWorldPoint.x), Mathf.RoundToInt(screenToWorldPoint.y),0);
 
 			var worldToCell = GameSingleton.Instance.GridLayout.WorldToCell(screenToWorldPoint);
-			var positionProperty = GameSingleton.Instance.GridInformation.GetPositionProperty(worldToCell, TilemapProperty.TrapProperty, 0);
-			if (positionProperty == 1)
-            {
-                if (OnTrapCell != null)
-                    OnTrapCell(worldToCell);
-            }
+            OnCellClick(worldToCell);
 		}
 	}
 }

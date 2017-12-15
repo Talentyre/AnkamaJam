@@ -19,9 +19,12 @@ public abstract class TrapModel : MonoBehaviour
     private TrapAOE m_aoe = TrapAOE.Point;
     [SerializeField]
     private int m_souls;
+    [SerializeField]
+    private bool m_automatic = true;
 
     public int Cooldown { get { return m_cooldown; } }
     public int Souls { get { return m_souls; } }
+    public bool Automatic { get { return m_automatic; } }
 
     public List<Vector2Int> ActivationPositions(Vector2Int pos)
     {
