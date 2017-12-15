@@ -92,7 +92,7 @@ public class GameSingleton : MonoBehaviour
             }
             else
             {
-                c.Move();   
+                c.MoveLoop();   
             }
         }
     }

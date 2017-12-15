@@ -35,6 +35,31 @@ public class CharacterModel : MonoBehaviour
     public float MaxStaticInterval { get { return m_maxStaticInterval; } }
     
     
+    [SerializeField]
+    private float m_minTalkInterval = 15f;
+
+    public float MinTalkInterval { get { return m_minTalkInterval; } }
+    
+    [SerializeField]
+    private float m_maxTalkInterval = 30f;
+
+    public float MaxTalkInterval { get { return m_maxTalkInterval; } }
+    
+    
+    private string[] m_randomSentences =
+    {
+        "Mais qu'est-ce que je fais ici ?",
+        "Ils savent quand même vachement bien jouer la mort !",
+        "O, D, I, L, Quest-ce que ça peut bien vouloir dire ?",
+        "Arrêtez de pousser ! Y en aura pour tout le monde !",
+        "Où sont les WCs ?",
+        "Je suis pas venu içi pour souffrir okay !?",
+        "J'ai un mauvais pressentiment",
+    };
+    
+    public string[] RandomSentences {get { return m_randomSentences; }}
+    
+    
     // Use this for initialization
     void Start()
     {

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Xml.Schema;
+using UnityEngine.UI;
 
 public class CharacterBehaviour : MonoBehaviour
 {
@@ -26,7 +27,11 @@ public class CharacterBehaviour : MonoBehaviour
 
     private CharacterStatesEnum m_characterStatesEnum = CharacterStatesEnum.WALKING;
     private float _nextStaticTime;
+    private float _nextTalkTime;
 
+    public GameObject BubblePrefab;
+    private GameObject _bubbleInstance;
+    private bool _talking;
 
     //public Vector2? Target { get { return m_target; } }
     // position en cours
@@ -55,6 +60,11 @@ public class CharacterBehaviour : MonoBehaviour
     {
         _nextStaticTime = Time.time + Random.Range(m_model.MinStaticInterval, m_model.MaxStaticInterval);
     }
+    
+    private void RefreshNextTalkTime()
+    {
+        _nextTalkTime = Time.time + Random.Range(m_model.MinTalkInterval, m_model.MaxTalkInterval);
+    }
 
     public void Init(CharacterModel model, Vector3Int position)
     {
@@ -66,6 +76,7 @@ public class CharacterBehaviour : MonoBehaviour
         m_currentLife = model.MaxLife;
         OnWalk();
         RefreshNextStaticTime();
+        RefreshNextTalkTime();
     }
 
     public void OnFear()
@@ -110,8 +121,12 @@ public class CharacterBehaviour : MonoBehaviour
         }
     }
 
-    public void Move()
+    public void MoveLoop()
     {
+        if (!_talking && Time.time > _nextTalkTime)
+            OnTalk();
+        
+        
         if (m_characterStatesEnum == CharacterStatesEnum.STATIC)
             return;
 
@@ -138,6 +153,31 @@ public class CharacterBehaviour : MonoBehaviour
 
         if (Mathf.Approximately(m_movePercentage, 1.0f)) 
             SelectWalkTarget();
+    }
+
+    private void OnTalk()
+    {
+        if (_bubbleInstance == null)
+        {
+            _bubbleInstance = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Bubble"), transform);
+            _bubbleInstance.transform.localPosition = Vector3.zero;
+        }
+        _talking = true;
+        
+        _bubbleInstance.gameObject.SetActive(true);
+        var randomSentence = m_model.RandomSentences[Helper.random(m_model.RandomSentences.Length)];
+        _bubbleInstance.GetComponentInChildren<Text>().text =
+            randomSentence;
+
+        StartCoroutine(CloseBubble(randomSentence.Length));
+    }
+
+    private IEnumerator CloseBubble(int randomSentenceLength)
+    {
+        yield return new WaitForSeconds(randomSentenceLength*0.1f);
+        _bubbleInstance.gameObject.SetActive(false);
+        _talking = false;
+        RefreshNextTalkTime();
     }
 
     private bool SelectWalkTarget()
