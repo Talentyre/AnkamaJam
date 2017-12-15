@@ -18,6 +18,7 @@ public class GameSceneUI : MonoBehaviour
 	public Image AlertGauge5;
 	private Tweener _alertTweener;
 	private Vector2 _soulGaugeBaseSizeDelta;
+	private Image _lastAlertGaugeActivated;
 
 	// Use this for initialization
 	void Start ()
@@ -30,15 +31,20 @@ public class GameSceneUI : MonoBehaviour
 		{
 			var alertPercent = (float)f/GameSingleton.MaxAlert;
 			var alerteGaugeToBlink = GetAlerteGaugeToBlink(alertPercent);
-			if (alerteGaugeToBlink != null  && _alertTweener == null)
+			if (alerteGaugeToBlink != null && _alertTweener == null)
 			{
 				_alertTweener = alerteGaugeToBlink.DOFade(0f, 1f).OnComplete(() => alerteGaugeToBlink.DOFade(1f, 1f)).SetLoops(-1);
 			}
-			var alerteGaugeToActive = GetAlerteGaugeToActive(alertPercent);
-			if (alerteGaugeToActive != null)
+			else
 			{
-				alerteGaugeToActive.DOKill();
-				alerteGaugeToActive.color = Color.white;
+				var alerteGaugeToActive = GetAlerteGaugeToActive(alertPercent);
+				if (alerteGaugeToActive != null && _lastAlertGaugeActivated != alerteGaugeToActive)
+				{
+					_lastAlertGaugeActivated = alerteGaugeToActive;
+					_alertTweener = null;
+					alerteGaugeToActive.DOKill();
+					alerteGaugeToActive.color = Color.white;
+				}	
 			}
 		};
 		GameSingleton.Instance.OnSoulUpdate += f =>
@@ -93,7 +99,7 @@ public class GameSceneUI : MonoBehaviour
 
 	public Image GetAlerteGaugeToActive(float percent)
 	{
-		if (percent < 0.4)
+		if (percent >= 0.2 && percent < 0.4)
 		{
 			return AlertGauge1;
 		}
