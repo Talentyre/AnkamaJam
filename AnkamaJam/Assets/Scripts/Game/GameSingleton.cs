@@ -228,7 +228,7 @@ public class GameSingleton : MonoBehaviour
         if (OnSoulUpdate != null)
             OnSoulUpdate(Souls);
 
-        var text = (soulDelta >= 0 ? "+ " : "- ") + soulDelta;
+        var text = (soulDelta >= 0 ? "+ " : "") + soulDelta;
         LaunchOverheadFeedback(text, Color.cyan, sourcePosition);
     }
 
@@ -288,6 +288,7 @@ public class GameSingleton : MonoBehaviour
             return;
         // Check souls
         var trap = TrapManager.SpawnTrap(model, position);
+        trap.OnPurchase();
         if (trap != null)
             m_traps.Add(trap);
     }

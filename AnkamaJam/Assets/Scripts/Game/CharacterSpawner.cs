@@ -10,9 +10,13 @@ public class CharacterSpawner : MonoBehaviour
 	public List<CharacterModel> CharacterModels;
 	private Dictionary<CharacterModel, float> m_charactersNextSpawn = new Dictionary<CharacterModel, float>();
 	private Vector3Int[] _spawnPositions;
+	private const float MinSpawnInterval = 1f;
+	private const float MaxDuration = 60 * 2;
+	private float _currentDuration;
 
 	public void Init()
 	{
+		_currentDuration = MaxDuration;
 		CharacterModels.ForEach(c =>
 		{
 			m_charactersNextSpawn.Add(c, Time.time+c.SpawnDelay);
@@ -20,6 +24,11 @@ public class CharacterSpawner : MonoBehaviour
 		_spawnPositions = GameSingleton.Instance.GetSpawnPosition();
 		if (_spawnPositions.Length == 0)
 			throw new Exception("No spawn position defined !!!");
+	}
+
+	private void Update()
+	{
+		_currentDuration -= Time.deltaTime;
 	}
 	
 	public List<CharacterBehaviour> SpawnCharacterLoop()
@@ -33,7 +42,7 @@ public class CharacterSpawner : MonoBehaviour
 			{
 				var position = _spawnPositions[Helper.random(_spawnPositions.Length)];
 				characterBehaviours.Add(SpawnCharacter(model, position));
-				m_charactersNextSpawn[model] = Time.time + model.SpawnInterval;
+				m_charactersNextSpawn[model] = Time.time + MinSpawnInterval + model.SpawnInterval*(_currentDuration/MaxDuration);
 			}
 		}
 		return characterBehaviours;
