@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 
 using System.Collections.Generic;
+using System.Linq;
 
 public class Trap : MonoBehaviour
 {
@@ -38,7 +39,10 @@ public class Trap : MonoBehaviour
         if (IsInCooldown)
             return;
 
-        IEnumerable<CharacterBehaviour> charactersInTrap = GameSingleton.Instance.GetCharactersAt(m_activationPositions);
+        var charactersInTrap = GameSingleton.Instance.GetCharactersAt(m_activationPositions).ToList() ;
+        if (automatic && charactersInTrap.Count == 0) 
+            return;
+
         foreach (var characterBehaviour in charactersInTrap)
         {
             m_model.Activate(characterBehaviour);
