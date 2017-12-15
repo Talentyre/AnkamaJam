@@ -21,7 +21,7 @@ public class GameSingleton : MonoBehaviour
 
     public GameObject OverhadFeedbackPrefab;
 
-    private const long BaseReputation = 100;
+    private const long MaxReputation = 100;
     private long _reputation;
 
     public long Reputation
@@ -30,7 +30,7 @@ public class GameSingleton : MonoBehaviour
         {
             return _reputation;
         }
-        set { _reputation = (long) Mathf.Max(_reputation, 0); }
+        set { _reputation = (long) Mathf.Min(_reputation, MaxReputation); }
     }
 
     private const long MaxSouls = 1000;
@@ -53,7 +53,7 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnTrapCell += OnTrapCell;
-        _reputation = BaseReputation;
+        _reputation = MaxReputation;
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
@@ -153,11 +153,18 @@ public class GameSingleton : MonoBehaviour
 
     private void OnCharacterVictory(CharacterBehaviour characterBehaviour)
     {
-        Reputation--;
+        Reputation++;
         var sourcePosition = characterBehaviour.transform.position;
         
         var text = "Victory !!!";
         LaunchOverheadFeedback(text, Color.yellow,sourcePosition);
+        StartCoroutine(ReputationFeedback(sourcePosition));
+    }
+
+    private IEnumerator ReputationFeedback(Vector3 sourcePosition)
+    {
+        yield return new WaitForSeconds(2f);
+        LaunchOverheadFeedback("+ 1",Color.red, sourcePosition);
     }
 
     private void ComputeCharacterDeath(CharacterBehaviour characterBehaviour)
