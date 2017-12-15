@@ -4,6 +4,8 @@ using UnityEngine;
 
 public enum CharacterStatesEnum {
     STATIC,
+    FEAR,
+    STUN,
     WALKING,
     RUNNING,
 }

@@ -36,6 +36,7 @@ public class CharacterBehaviour : MonoBehaviour
     private bool m_victory;
     private Object _bloodFxPrefab;
     private Object _deathFxPrefab;
+    private int m_fearCounter;
 
     public CharacterModel Model
     {
@@ -95,18 +96,40 @@ public class CharacterBehaviour : MonoBehaviour
         RefreshNextTalkTime();
     }
 
-    public void OnFear()
+    private Coroutine m_currentCoroutine = null;
+    private void StartMovementCoroutine(IEnumerator routine)
     {
+        if (m_currentCoroutine != null)
+            StopCoroutine(m_currentCoroutine);
+        m_currentCoroutine = StartCoroutine(routine);
+    }
+
+
+    public void OnFear(int power)
+    {
+        m_characterStatesEnum = CharacterStatesEnum.FEAR;
         m_animator.SetBool("criPeur", true);
-        m_target = m_positionInt;
+        m_target = null;
+        m_fearCounter = power;
+        StartMovementCoroutine(RunAfterFear());
+    }
+
+    public IEnumerator RunAfterFear()
+    {
+        yield return new WaitForSeconds(0.7f);
+        OnRun();
     }
 
     public void OnRun()
     {
         m_characterStatesEnum = CharacterStatesEnum.RUNNING;
         m_speed = m_model.Speed * 2;
-        // TODO trouver une target de fuite
-        //m_target =
+    }
+
+    public void OnStopRun()
+    {
+        m_animator.SetBool("criPeur", false);
+        OnWalk();
     }
 
     public void OnWalk()
@@ -124,13 +147,13 @@ public class CharacterBehaviour : MonoBehaviour
         m_animator.SetBool("marche", false);
         m_speed = m_model.Speed;
         
-        StartCoroutine(GoToWalk(Random.Range(3,5)));
+        StartMovementCoroutine(GoToWalk(Random.Range(3,5)));
     }
 
     private IEnumerator GoToWalk(float range)
     {
         yield return new WaitForSeconds(range);
-        if (m_model != null)
+        if (m_model != null && m_characterStatesEnum == CharacterStatesEnum.STATIC)
         {
             RefreshNextStaticTime();
             OnWalk();
@@ -146,14 +169,32 @@ public class CharacterBehaviour : MonoBehaviour
         if (m_characterStatesEnum == CharacterStatesEnum.STATIC)
             return;
 
+        if (m_characterStatesEnum == CharacterStatesEnum.FEAR)
+            return;
+
+        if (m_characterStatesEnum == CharacterStatesEnum.STUN)
+            return;
+
+
         if (Time.time > _nextStaticTime)
         {
             OnStatic();
             return;
         }
-        
-        if (m_target == null && SelectWalkTarget()) 
-            return;
+
+        if (m_target == null) {
+            switch (m_characterStatesEnum)
+            {
+                case CharacterStatesEnum.WALKING:
+                    if (SelectWalkTarget())
+                        return;
+                    break;
+                case CharacterStatesEnum.RUNNING:
+                    if (SelectRunTarget(true))
+                        return;
+                    break;
+            }
+        }
 
         var target = m_target.GetValueOrDefault();
         var target2 = m_targetWithALittleJoke.GetValueOrDefault();
@@ -219,6 +260,34 @@ public class CharacterBehaviour : MonoBehaviour
             return true;
         }
         m_target = m_positionInt + MovingSidewalk.GetVector2IntFromDirection(movingSideWalkAt.PickExit());
+        m_targetWithALittleJoke = m_target + Random.insideUnitCircle * 0.3f;
+        m_startPosition = m_position;
+        m_startPositionWithALittleJoke = m_positionWithALittleJoke;
+        m_movePercentage = 0.0f;
+        return false;
+    }
+
+
+    private bool SelectRunTarget(bool invertDirection)
+    {
+        if (m_fearCounter <= 0)
+        {
+            OnStopRun();
+            return false;
+        }
+
+        OnRun();
+
+        var movingSideWalkAt = GameSingleton.Instance.GetMovingSideWalkAt(m_positionInt);
+        if (movingSideWalkAt == null)
+        {
+            m_currentLife = 0;
+            return true;
+        }
+
+        m_fearCounter--;
+
+        m_target = m_positionInt + MovingSidewalk.GetVector2IntFromDirection(movingSideWalkAt.PickEntrance());
         m_targetWithALittleJoke = m_target + Random.insideUnitCircle * 0.3f;
         m_startPosition = m_position;
         m_startPositionWithALittleJoke = m_positionWithALittleJoke;
