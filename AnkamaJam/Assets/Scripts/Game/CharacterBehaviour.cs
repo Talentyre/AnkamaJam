@@ -135,7 +135,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void MoveLoop()
     {
-        if (!_talking && Time.time > _nextTalkTime)
+        if (!_talking && Time.time > _nextTalkTime && m_characterStatesEnum == CharacterStatesEnum.STATIC)
             OnTalk();
         
         
