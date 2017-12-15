@@ -3,6 +3,8 @@ using System.Collections.Generic;
 
 public abstract class TrapModel : MonoBehaviour
 {
+    [SerializeField]
+    private Sprite m_trapUISprite;
 	[SerializeField]
 	private int m_cooldown;
     [SerializeField]

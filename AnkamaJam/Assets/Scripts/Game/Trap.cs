@@ -13,6 +13,7 @@ public class Trap : MonoBehaviour
 	private List<Vector2Int> m_activationPositions;
 
     public Vector2Int Position { get { return m_position; } }
+    public List<Vector2Int> ActivationPositions { get { return m_activationPositions; } }
 
     public void Init(TrapModel model, Vector3Int position)
     {

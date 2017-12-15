@@ -43,7 +43,7 @@ public class TrapManager : MonoBehaviour
         return SpawnTrap(trap, position);
     }
 
-    private Trap SpawnTrap(TrapModel model, Vector3Int position)
+    public Trap SpawnTrap(TrapModel model, Vector3Int position)
     {
         var trapGO = Instantiate(model.gameObject);
         trapGO.transform.SetParent(m_trapContainer);
@@ -54,4 +54,9 @@ public class TrapManager : MonoBehaviour
         return trap;
     }
         
+    public Trap StartPreviewTrap(TrapModel model)
+    {
+        return SpawnTrap(model, Vector3Int.zero);
+    }
+
 }

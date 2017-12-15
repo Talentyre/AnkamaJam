@@ -73,7 +73,7 @@ public class GameSingleton : MonoBehaviour
 
     public void OnTrapCell(Vector3Int position)
     {
-        var pos = new Vector2Int(position.x, position.y);
+        /*var pos = new Vector2Int(position.x, position.y);
         if (!TrapExistsAt(pos))
         {
             var trap = TrapManager.SpawnRandomTrap(position);
@@ -83,7 +83,7 @@ public class GameSingleton : MonoBehaviour
         else
         {
             Debug.Log("A trap is already present at the position.");
-        }
+        }*/
     }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
@@ -180,5 +180,30 @@ public class GameSingleton : MonoBehaviour
     public Vector3Int[] GetSpawnPosition()
     {
         return GridInformation.GetAllPositions(TilemapProperty.StartProperty);
+    }
+
+    public bool CanSpawnTrapAt(TrapModel model, Vector3Int position)
+    {
+        var positions = Helper.ToVector3Int(model.ActivationPositions(new Vector2Int(position.x, position.y)));
+        var trapPositions = GridInformation.GetAllPositions(TilemapProperty.TrapProperty);
+
+        if (!positions.All((pos) => trapPositions.Contains(pos)))
+            return false;
+
+        List<Vector3Int> allTrapsPositions = new List<Vector3Int>();
+        m_traps.ForEach((t) => allTrapsPositions.AddRange(Helper.ToVector3Int(t.ActivationPositions)));
+        return !positions.Any((pos) => allTrapsPositions.Contains(pos));
+
+    }
+
+    public void RequestSpawnAt(TrapModel model, Vector3Int position)
+    {
+        if (!CanSpawnTrapAt(model, position))
+            return;
+        // Check souls
+        var trap = TrapManager.SpawnTrap(model, position);
+        if (trap != null)
+            m_traps.Add(trap);
+        
     }
 }
