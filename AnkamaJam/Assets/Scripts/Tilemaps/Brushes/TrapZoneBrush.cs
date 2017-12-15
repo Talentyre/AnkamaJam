@@ -17,7 +17,7 @@ public class TrapZoneBrush : GridBrushBase
     }
 #endif
 
-    public string m_startLayerName = "HorrorHouseStart";
+    public string m_startLayerName = "HorrorHouseTraps";
     public TileBase m_trap;
 
     //Paint internal macht wahrscheinlich selber noch kein Tile an die gewünschte Position

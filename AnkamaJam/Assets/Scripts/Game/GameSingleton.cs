@@ -11,7 +11,11 @@ using Object = UnityEngine.Object;
 public class GameSingleton : MonoBehaviour
 {
     private static GameSingleton m_instance;
-	public static GameSingleton Instance { get { return m_instance; } }
+
+    public static GameSingleton Instance
+    {
+        get { return m_instance; }
+    }
 
     public GridInformation GridInformation;
     public CharacterSpawner CharacterSpawner;
@@ -23,15 +27,14 @@ public class GameSingleton : MonoBehaviour
 
     public GameObject OverhadFeedbackPrefab;
 
+    public Tilemap TrapTilemap;
+
     public const long MaxAlert = 100;
     private long _alert;
 
     public long Alert
     {
-        get
-        {
-            return _alert;
-        }
+        get { return _alert; }
         set
         {
             _alert = (long) Mathf.Min(value, MaxAlert);
@@ -46,20 +49,14 @@ public class GameSingleton : MonoBehaviour
     public long Souls
     {
         get { return _souls; }
-        set
-        {
-            _souls = (long) Mathf.Min(value, MaxSouls);
-        }
+        set { _souls = (long) Mathf.Min(value, MaxSouls); }
     }
 
     private long _score;
 
     public long Score
     {
-        get
-        {
-            return _score;
-        }
+        get { return _score; }
         set
         {
             _score = value;
@@ -67,10 +64,13 @@ public class GameSingleton : MonoBehaviour
                 OnScoreUpdate(_score);
         }
     }
-    
-    public bool IsGameOver { get { return _alert >= MaxAlert; } }
-    
-    
+
+    public bool IsGameOver
+    {
+        get { return _alert >= MaxAlert; }
+    }
+
+
     private void Awake()
     {
         m_instance = this;
@@ -94,6 +94,7 @@ public class GameSingleton : MonoBehaviour
     private int _combo;
     private const float ComboBaseDuration = 5;
     private float _comboDuration;
+
     private int Combo
     {
         get { return _combo; }
@@ -114,13 +115,13 @@ public class GameSingleton : MonoBehaviour
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
     {
         return m_characters.Where((c) => c.PositionInt.Equals(position));
-    } 
+    }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(List<Vector2Int> positions)
     {
         return m_characters.Where((c) => positions.Contains(c.PositionInt));
     }
-    
+
     public bool TrapExistsAt(Vector2Int position)
     {
         return m_traps.Any((trap) => position.Equals(trap.Position));
@@ -140,8 +141,8 @@ public class GameSingleton : MonoBehaviour
                 Combo = 0;
         }
     }
-    
-   public void GameLoop()
+
+    public void GameLoop()
     {
         if (_gameOverLaunched)
             return;
@@ -150,7 +151,7 @@ public class GameSingleton : MonoBehaviour
             OnGameOver();
             return;
         }
-        
+
         var spawnedCharacters = CharacterSpawner.SpawnCharacterLoop();
         m_characters.AddRange(spawnedCharacters);
 
@@ -160,7 +161,7 @@ public class GameSingleton : MonoBehaviour
             trap.Act();
         }
 
-        for (int i = m_characters.Count-1; i >= 0; --i)
+        for (int i = m_characters.Count - 1; i >= 0; --i)
         {
             var c = m_characters[i];
             if (c.IsDead)
@@ -169,7 +170,8 @@ public class GameSingleton : MonoBehaviour
                 c.OnDeath();
                 ComputeCharacterDeath(c);
                 m_characters.RemoveAt(i);
-            } else if (c.IsVictory)
+            }
+            else if (c.IsVictory)
             {
                 OnCharacterVictory(c);
                 m_characters.RemoveAt(i);
@@ -177,7 +179,7 @@ public class GameSingleton : MonoBehaviour
             }
             else
             {
-                c.MoveLoop();   
+                c.MoveLoop();
             }
         }
     }
@@ -185,7 +187,7 @@ public class GameSingleton : MonoBehaviour
     private void OnGameOver()
     {
         _gameOverLaunched = true;
-        
+
         // todo score et compagnie !
         var showPanels = SceneHandler.Instance.gameObject.GetComponent<ShowPanels>();
         SceneHandler.Instance.Load(SceneHandler.StartScene, () => showPanels.ShowMenu());
@@ -195,16 +197,16 @@ public class GameSingleton : MonoBehaviour
     {
         Alert++;
         var sourcePosition = characterBehaviour.transform.position;
-        
+
         var text = "Victory !!!";
-        LaunchOverheadFeedback(text, Color.yellow,sourcePosition);
+        LaunchOverheadFeedback(text, Color.yellow, sourcePosition);
         StartCoroutine(ReputationFeedback(sourcePosition));
     }
 
     private IEnumerator ReputationFeedback(Vector3 sourcePosition)
     {
         yield return new WaitForSeconds(2f);
-        LaunchOverheadFeedback("+ 1",Color.red, sourcePosition);
+        LaunchOverheadFeedback("+ 1", Color.red, sourcePosition);
     }
 
     private void ComputeCharacterDeath(CharacterBehaviour characterBehaviour)
@@ -215,7 +217,7 @@ public class GameSingleton : MonoBehaviour
         Combo++;
         Score += characterBehaviour.Model.Score * Combo;
         _comboDuration = ComboBaseDuration;
-        
+
         OnSoulModified(modelSoul, sourcePosition);
     }
 
@@ -226,7 +228,7 @@ public class GameSingleton : MonoBehaviour
             OnSoulUpdate(Souls);
 
         var text = (soulDelta >= 0 ? "+ " : "- ") + soulDelta;
-        LaunchOverheadFeedback(text, Color.cyan,sourcePosition);
+        LaunchOverheadFeedback(text, Color.cyan, sourcePosition);
     }
 
     private void LaunchOverheadFeedback(string text, Color color, Vector3 sourcePosition)
@@ -247,13 +249,15 @@ public class GameSingleton : MonoBehaviour
 
     public MovingSidewalk GetMovingSideWalkAt(Vector2Int mPositionInt)
     {
-        var vector3Int = new Vector3Int(mPositionInt.x,mPositionInt.y,0);
-        GameObject movingGameObject = (GameObject) GridInformation.GetPositionProperty(vector3Int, TilemapProperty.MovingSidewalkProperty, (Object) null);
+        var vector3Int = new Vector3Int(mPositionInt.x, mPositionInt.y, 0);
+        GameObject movingGameObject =
+            (GameObject) GridInformation.GetPositionProperty(vector3Int, TilemapProperty.MovingSidewalkProperty,
+                (Object) null);
         if (movingGameObject == null)
             return null;
         return movingGameObject.GetComponent<MovingSidewalk>();
     }
-    
+
     public Vector3Int[] GetTrapPositions()
     {
         return GridInformation.GetAllPositions(TilemapProperty.TrapProperty);
@@ -275,7 +279,6 @@ public class GameSingleton : MonoBehaviour
         List<Vector3Int> allTrapsPositions = new List<Vector3Int>();
         m_traps.ForEach((t) => allTrapsPositions.AddRange(Helper.ToVector3Int(t.ActivationPositions)));
         return !positions.Any((pos) => allTrapsPositions.Contains(pos));
-
     }
 
     public void RequestSpawnAt(TrapModel model, Vector3Int position)
@@ -286,6 +289,10 @@ public class GameSingleton : MonoBehaviour
         var trap = TrapManager.SpawnTrap(model, position);
         if (trap != null)
             m_traps.Add(trap);
-        
+    }
+
+    public void BeginDrag(bool drag)
+    {
+        TrapTilemap.color = drag ? Color.white : new Color(1f, 1f, 1f, 0.3f);
     }
 }

@@ -15,11 +15,13 @@ public class TrapElementUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        GameSingleton.Instance.BeginDrag(true);
         m_currentDnD = GameSingleton.Instance.TrapManager.StartPreviewTrap(m_model);
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
+        GameSingleton.Instance.BeginDrag(false);
         GameSingleton.Instance.RequestSpawnAt(m_model, ExtractCellPosition(eventData));
         Destroy(m_currentDnD.gameObject);
     }
