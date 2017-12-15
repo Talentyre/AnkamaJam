@@ -15,8 +15,11 @@ public abstract class TrapModel : MonoBehaviour
     private Animator m_animator;
     [SerializeField]
     private TrapAOE m_aoe = TrapAOE.Point;
+    [SerializeField]
+    private int m_souls;
 
     public int Cooldown { get { return m_cooldown; } }
+    public int Souls { get { return m_souls; } }
 
     public List<Vector2Int> ActivationPositions(Vector2Int pos)
     {

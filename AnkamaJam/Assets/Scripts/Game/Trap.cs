@@ -41,5 +41,10 @@ public class Trap : MonoBehaviour
         }
 		
 	}
+ 
+    public void OnPurchase()
+    {
+        GameSingleton.Instance.OnSoulModified(-Model.Souls,transform.position);
+    }
     
 }
