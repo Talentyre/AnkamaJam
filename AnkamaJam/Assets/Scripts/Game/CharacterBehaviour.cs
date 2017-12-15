@@ -26,8 +26,6 @@ public class CharacterBehaviour : MonoBehaviour
 
     private CharacterStatesEnum m_characterStatesEnum = CharacterStatesEnum.WALKING;
     private float _nextStaticTime;
-    private const float MinStaticInterval = 5;
-    private const float MaxStaticInterval = 10;
 
 
     //public Vector2? Target { get { return m_target; } }
@@ -51,12 +49,11 @@ public class CharacterBehaviour : MonoBehaviour
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
-        OnWalk();
     }
 
     private void RefreshNextStaticTime()
     {
-        _nextStaticTime = Time.time + Random.Range(MinStaticInterval, MaxStaticInterval);
+        _nextStaticTime = Time.time + Random.Range(m_model.MinStaticInterval, m_model.MaxStaticInterval);
     }
 
     public void Init(CharacterModel model, Vector3Int position)
@@ -67,6 +64,8 @@ public class CharacterBehaviour : MonoBehaviour
 
         m_model = model;
         m_currentLife = model.MaxLife;
+        OnWalk();
+        RefreshNextStaticTime();
     }
 
     public void OnFear()
@@ -85,10 +84,6 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void OnWalk()
     {
-        if (m_model == null)
-            return;
-        RefreshNextStaticTime();
-        
         m_characterStatesEnum = CharacterStatesEnum.WALKING;
         m_animator.SetBool("marche", true);
         m_speed = m_model.Speed;
@@ -102,7 +97,17 @@ public class CharacterBehaviour : MonoBehaviour
         m_animator.SetBool("marche", false);
         m_speed = m_model.Speed;
         
-        Invoke("OnWalk",Random.Range(3,5));
+        StartCoroutine(GoToWalk(Random.Range(3,5)));
+    }
+
+    private IEnumerator GoToWalk(float range)
+    {
+        yield return new WaitForSeconds(range);
+        if (m_model != null)
+        {
+            RefreshNextStaticTime();
+            OnWalk();
+        }
     }
 
     public void Move()

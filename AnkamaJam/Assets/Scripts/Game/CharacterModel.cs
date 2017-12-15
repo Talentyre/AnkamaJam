@@ -24,6 +24,15 @@ public class CharacterModel : MonoBehaviour
 
     public float SpawnDelay { get { return m_spawnDelay; } }
 
+    [SerializeField]
+    private float m_minStaticInterval = 7f;
+
+    public float MinStaticInterval { get { return m_minStaticInterval; } }
+    
+    [SerializeField]
+    private float m_maxStaticInterval = 30f;
+
+    public float MaxStaticInterval { get { return m_maxStaticInterval; } }
     
     
     // Use this for initialization
