@@ -46,6 +46,14 @@ public class CharacterModel : MonoBehaviour
     public float MaxTalkInterval { get { return m_maxTalkInterval; } }
     
     
+    [SerializeField]
+    private int m_soul = 1;
+
+    public int Soul { get { return m_soul; } }
+    
+    
+    
+    
     private string[] m_randomSentences =
     {
         "Mais qu'est-ce que je fais ici ?",

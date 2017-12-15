@@ -33,6 +33,11 @@ public class CharacterBehaviour : MonoBehaviour
     private GameObject _bubbleInstance;
     private bool _talking;
 
+    public CharacterModel Model
+    {
+        get { return m_model; }
+    }
+
     //public Vector2? Target { get { return m_target; } }
     // position en cours
     public Vector2 Position
@@ -203,6 +208,12 @@ public class CharacterBehaviour : MonoBehaviour
     {
         m_currentLife -= mDamage;
         // todo jouer FX de dégâts
+        OnHit();
+    }
+
+    private void OnHit()
+    {
+        m_animator.SetTrigger("hit");
     }
 
     public void OnDeath()

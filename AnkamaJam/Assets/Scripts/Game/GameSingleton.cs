@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameSingleton : MonoBehaviour
 {
@@ -15,6 +18,31 @@ public class GameSingleton : MonoBehaviour
     public InputManager InputManager;
 
     public float LogicFps = 30;
+
+    public GameObject SoulGainFeedbackPrefab;
+    public CharacterModel TetsCharacterBehaviour;
+
+    private const long BaseReputation = 100;
+    private long _reputation;
+
+    public long Reputation
+    {
+        get
+        {
+            return _reputation;
+        }
+        set { _reputation = (long) Mathf.Max(_reputation, 0); }
+    }
+
+    private const long MaxSouls = 1000;
+    private long _souls;
+
+    public long Souls
+    {
+        get { return _souls; }
+        set { _souls = (long) Mathf.Min(_souls, MaxSouls); }
+    }
+    
     
     private void Awake()
     {
@@ -24,8 +52,20 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnTrapCell += OnTrapCell;
+        _reputation = BaseReputation;
+
+        Invoke("Pouet",2);
+        Invoke("Pouet",4);
     }
-    
+
+    private void Pouet()
+    {
+        var characterBehaviour = TetsCharacterBehaviour.gameObject.AddComponent<CharacterBehaviour>();
+        characterBehaviour.Init(TetsCharacterBehaviour, Vector3Int.zero);
+        
+        ComputeCharacterDeath(characterBehaviour);
+    }
+
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
     private readonly List<Trap> m_traps = new List<Trap>();
     private float _lastTick;
@@ -88,6 +128,7 @@ public class GameSingleton : MonoBehaviour
             {
                 Debug.Log("Character Dead " + c);
                 c.OnDeath();
+                ComputeCharacterDeath(c);
                 m_characters.RemoveAt(i);
             }
             else
@@ -95,6 +136,31 @@ public class GameSingleton : MonoBehaviour
                 c.MoveLoop();   
             }
         }
+    }
+
+    private void ComputeCharacterDeath(CharacterBehaviour characterBehaviour)
+    {
+        var modelSoul = characterBehaviour.Model.Soul;
+        var sourcePosition = characterBehaviour.transform.position;
+        
+        OnSoulModified(modelSoul, sourcePosition);
+    }
+
+    public void OnSoulModified(int soulDelta, Vector3 sourcePosition)
+    {
+        Souls += soulDelta;
+
+        GameObject soulGain = Instantiate(SoulGainFeedbackPrefab);
+
+        soulGain.transform.position = sourcePosition + Vector3.up * 0.5f;
+
+        soulGain.transform.DOLocalMoveY(soulGain.transform.position.y + 0.5f, 1f);
+        var componentInChildren = soulGain.GetComponent<Text>();
+        componentInChildren.text = (soulDelta >= 0 ? "+ "  : "- ")+ soulDelta;
+        componentInChildren.DOFade(1f, 0.5f).OnComplete(() =>
+        {
+            componentInChildren.DOFade(0f, 0.5f).OnComplete(() => Destroy(soulGain));
+        });
     }
 
     public MovingSidewalk GetMovingSideWalkAt(Vector2Int mPositionInt)
