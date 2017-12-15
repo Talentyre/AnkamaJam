@@ -21,7 +21,7 @@ public class Trap : MonoBehaviour
         m_activationPositions = new List<Vector2Int>();
 
         m_position = new Vector2Int(position.x, position.y);
-        m_activationPositions.Add(m_position);
+        m_activationPositions.AddRange(m_model.ActivationPositions(m_position));
     }
 
     public TrapModel Model { get { return m_model; } }
