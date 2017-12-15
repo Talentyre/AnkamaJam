@@ -19,8 +19,7 @@ public class GameSingleton : MonoBehaviour
 
     public float LogicFps = 30;
 
-    public GameObject SoulGainFeedbackPrefab;
-    public CharacterModel TetsCharacterBehaviour;
+    public GameObject OverhadFeedbackPrefab;
 
     private const long BaseReputation = 100;
     private long _reputation;
@@ -53,17 +52,6 @@ public class GameSingleton : MonoBehaviour
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnTrapCell += OnTrapCell;
         _reputation = BaseReputation;
-
-        Invoke("Pouet",2);
-        Invoke("Pouet",4);
-    }
-
-    private void Pouet()
-    {
-        var characterBehaviour = TetsCharacterBehaviour.gameObject.AddComponent<CharacterBehaviour>();
-        characterBehaviour.Init(TetsCharacterBehaviour, Vector3Int.zero);
-        
-        ComputeCharacterDeath(characterBehaviour);
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
@@ -130,12 +118,26 @@ public class GameSingleton : MonoBehaviour
                 c.OnDeath();
                 ComputeCharacterDeath(c);
                 m_characters.RemoveAt(i);
+            } else if (c.IsVictory)
+            {
+                OnCharacterVictory(c);
+                m_characters.RemoveAt(i);
+                Destroy(c.gameObject);
             }
             else
             {
                 c.MoveLoop();   
             }
         }
+    }
+
+    private void OnCharacterVictory(CharacterBehaviour characterBehaviour)
+    {
+        Reputation--;
+        var sourcePosition = characterBehaviour.transform.position;
+        
+        var text = "Victory !!!";
+        LaunchOverheadFeedback(text, Color.yellow,sourcePosition);
     }
 
     private void ComputeCharacterDeath(CharacterBehaviour characterBehaviour)
@@ -150,13 +152,20 @@ public class GameSingleton : MonoBehaviour
     {
         Souls += soulDelta;
 
-        GameObject soulGain = Instantiate(SoulGainFeedbackPrefab);
+        var text = (soulDelta >= 0 ? "+ " : "- ") + soulDelta;
+        LaunchOverheadFeedback(text, Color.cyan,sourcePosition);
+    }
+
+    private void LaunchOverheadFeedback(string text, Color color, Vector3 sourcePosition)
+    {
+        GameObject soulGain = Instantiate(OverhadFeedbackPrefab);
 
         soulGain.transform.position = sourcePosition + Vector3.up * 0.5f;
 
         soulGain.transform.DOLocalMoveY(soulGain.transform.position.y + 0.5f, 1f);
         var componentInChildren = soulGain.GetComponent<Text>();
-        componentInChildren.text = (soulDelta >= 0 ? "+ "  : "- ")+ soulDelta;
+        componentInChildren.text = text;
+        componentInChildren.color = color;
         componentInChildren.DOFade(1f, 0.5f).OnComplete(() =>
         {
             componentInChildren.DOFade(0f, 0.5f).OnComplete(() => Destroy(soulGain));
