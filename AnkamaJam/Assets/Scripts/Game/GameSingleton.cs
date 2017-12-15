@@ -12,6 +12,7 @@ public class GameSingleton : MonoBehaviour
     public CharacterSpawner CharacterSpawner;
     public GridLayout GridLayout;
     public TrapManager TrapManager;
+    public InputManager InputManager;
 
     public float LogicFps = 30;
     
@@ -22,12 +23,28 @@ public class GameSingleton : MonoBehaviour
         _tickInterval = 1 / LogicFps;
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
+        InputManager.OnTrapCell += OnTrapCell;
     }
     
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
     private readonly List<Trap> m_traps = new List<Trap>();
     private float _lastTick;
     private float _tickInterval;
+
+    public void OnTrapCell(Vector3Int position)
+    {
+        var pos = new Vector2Int(position.x, position.y);
+        if (!TrapExistsAt(pos))
+        {
+            var trap = TrapManager.SpawnRandomTrap(position);
+            if (trap != null)
+                m_traps.Add(trap);
+        }
+        else
+        {
+            Debug.Log("A trap is already present at the position.");
+        }
+    }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
     {
@@ -37,6 +54,11 @@ public class GameSingleton : MonoBehaviour
     public IEnumerable<CharacterBehaviour> GetCharactersAt(List<Vector2Int> positions)
     {
         return m_characters.Where((c) => positions.Contains(c.PositionInt));
+    }
+    
+    public bool TrapExistsAt(Vector2Int position)
+    {
+        return m_traps.Any((trap) => position.Equals(trap.Position));
     }
 
     private void Update()
