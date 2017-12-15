@@ -34,6 +34,8 @@ public class CharacterBehaviour : MonoBehaviour
     private bool _talking;
     private bool m_tempVictory;
     private bool m_victory;
+    private Object _bloodFxPrefab;
+    private Object _deathFxPrefab;
 
     public CharacterModel Model
     {
@@ -66,6 +68,8 @@ public class CharacterBehaviour : MonoBehaviour
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
+        _bloodFxPrefab = Resources.Load("Prefabs/FX/BloodFx");
+        _deathFxPrefab = Resources.Load("Prefabs/FX/DeathFx");
     }
 
     private void RefreshNextStaticTime()
@@ -232,10 +236,14 @@ public class CharacterBehaviour : MonoBehaviour
     private void OnHit()
     {
         m_animator.SetTrigger("hit");
+        GameObject bloodFx = (GameObject)Instantiate(_bloodFxPrefab);
+        bloodFx.transform.position = transform.position;
     }
 
     public void OnDeath()
     {
         Destroy(gameObject);
+        GameObject deathFx = (GameObject)Instantiate(_deathFxPrefab);
+        deathFx.transform.position = transform.position + Vector3.down*0.5f;
     }
 }
