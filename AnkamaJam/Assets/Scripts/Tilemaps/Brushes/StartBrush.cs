@@ -21,6 +21,12 @@ public class StartBrush : GridBrushBase
 
     public string m_startLayerName = "HorrorHouseStart";
     public TileBase m_start;
+    public bool IsStart = true;
+
+    private string CurrentProperty
+    {
+        get { return IsStart ? TilemapProperty.StartProperty : TilemapProperty.EndProperty; }
+    }
 
     //Paint internal macht wahrscheinlich selber noch kein Tile an die gewünschte Position
     public override void Paint(GridLayout grid, GameObject layer, Vector3Int position)
@@ -30,8 +36,8 @@ public class StartBrush : GridBrushBase
 
         if (start != null)
         {
-            gridInformation.ErasePositionProperty(position, TilemapProperty.StartProperty);
-            gridInformation.SetPositionProperty(position, TilemapProperty.StartProperty, 1);
+            gridInformation.ErasePositionProperty(position, CurrentProperty);
+            gridInformation.SetPositionProperty(position, CurrentProperty, 1);
             PaintInternal(position, start);
         }
     }
@@ -47,7 +53,7 @@ public class StartBrush : GridBrushBase
         if (map != null)
         {
             var gridInformation = BrushUtility.GetRootGridInformation(true, map.layoutGrid);
-            gridInformation.ErasePositionProperty(position, TilemapProperty.StartProperty);
+            gridInformation.ErasePositionProperty(position, CurrentProperty);
             map.SetTile(position, null);
         }
     }
