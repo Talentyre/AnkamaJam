@@ -1,8 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 
 public class InputManager : MonoBehaviour {
+
+    public event Action<Vector3Int> OnTrapCell;
 
 	// Use this for initialization
 	void Start () {
@@ -19,7 +22,10 @@ public class InputManager : MonoBehaviour {
 			var worldToCell = GameSingleton.Instance.GridLayout.WorldToCell(screenToWorldPoint);
 			var positionProperty = GameSingleton.Instance.GridInformation.GetPositionProperty(worldToCell, TilemapProperty.TrapProperty, 0);
 			if (positionProperty == 1)
-				Debug.Log("It's a trap ! "+worldToCell);
+            {
+                if (OnTrapCell != null)
+                    OnTrapCell(worldToCell);
+            }
 		}
 	}
 }

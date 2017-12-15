@@ -19,7 +19,7 @@ public class TrapManager : MonoBehaviour
         if (positions.Length == 0)
             return list;
 
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 0; i++)
         {
             var trapIndex = Helper.random(m_traps.Count);
             var positionIndex = Helper.random(positions.Length);
@@ -31,6 +31,16 @@ public class TrapManager : MonoBehaviour
         }
 
         return list;
+    }
+
+    public Trap SpawnRandomTrap(Vector3Int position)
+    {
+        if (m_traps.Count == 0)
+            return null;
+
+        var trapIndex = Helper.random(m_traps.Count);
+        var trap = m_traps[trapIndex];
+        return SpawnTrap(trap, position);
     }
 
     private Trap SpawnTrap(TrapModel model, Vector3Int position)

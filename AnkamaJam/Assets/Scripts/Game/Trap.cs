@@ -12,14 +12,16 @@ public class Trap : MonoBehaviour
     private Vector2Int m_position;
 	private List<Vector2Int> m_activationPositions;
 
+    public Vector2Int Position { get { return m_position; } }
+
     public void Init(TrapModel model, Vector3Int position)
     {
         m_model = model;
         m_nextActivation = Time.realtimeSinceStartup + m_model.Delay;
         m_activationPositions = new List<Vector2Int>();
 
-        var pos = new Vector2Int(position.x, position.y);
-        m_activationPositions.Add(pos);
+        m_position = new Vector2Int(position.x, position.y);
+        m_activationPositions.Add(m_position);
     }
 
     public TrapModel Model { get { return m_model; } }
