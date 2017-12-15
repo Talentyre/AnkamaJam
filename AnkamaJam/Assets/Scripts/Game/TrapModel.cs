@@ -43,6 +43,9 @@ public abstract class TrapModel : MonoBehaviour
                 list.Add(pos + Vector2Int.up);
                 list.Add(pos + Vector2Int.down);
                 break;
+            case TrapAOE.Down:
+                list.Add(pos + Vector2Int.down);
+                break;
             case TrapAOE.Cross:
                 list.Add(pos + Vector2Int.left);
                 list.Add(pos + Vector2Int.right);

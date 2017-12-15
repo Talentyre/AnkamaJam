@@ -6,5 +6,6 @@ public enum TrapAOE
     Point,
     LineHorizontal,
     LineVertical,
-    Cross
+    Cross,
+    Down,
 }

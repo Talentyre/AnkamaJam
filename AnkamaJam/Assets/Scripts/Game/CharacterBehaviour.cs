@@ -109,8 +109,15 @@ public class CharacterBehaviour : MonoBehaviour
     public void OnStun(float duration)
     {
         m_characterStatesEnum = CharacterStatesEnum.STUN;
+        m_animator.SetBool("scared", true);
         m_stunEnd = Time.time + duration;
         m_target = null;
+    }
+
+    public void OnStunEnd()
+    {
+        m_animator.SetBool("scared", false);
+        m_characterStatesEnum = CharacterStatesEnum.WALKING;
     }
 
     public void OnFear(int power)
@@ -183,7 +190,9 @@ public class CharacterBehaviour : MonoBehaviour
         if (m_characterStatesEnum == CharacterStatesEnum.STUN)
         {
             if (Time.time > m_stunEnd)
-                m_characterStatesEnum = CharacterStatesEnum.WALKING;
+            {
+                OnStunEnd();
+            }
             return;
         }
 
