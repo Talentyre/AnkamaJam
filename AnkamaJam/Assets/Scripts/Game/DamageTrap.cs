@@ -6,7 +6,6 @@ public class DamageTrap : TrapModel
 	private int m_damage; 
 
 	public override void Activate(CharacterBehaviour character) {
-        base.Activate(character);
         character.Damage (m_damage);
 	}	
 }

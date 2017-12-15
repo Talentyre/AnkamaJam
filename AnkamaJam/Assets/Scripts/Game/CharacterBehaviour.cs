@@ -32,6 +32,13 @@ public class CharacterBehaviour : MonoBehaviour
     public GameObject BubblePrefab;
     private GameObject _bubbleInstance;
     private bool _talking;
+    private bool m_tempVictory;
+    private bool m_victory;
+
+    public CharacterModel Model
+    {
+        get { return m_model; }
+    }
 
     //public Vector2? Target { get { return m_target; } }
     // position en cours
@@ -49,6 +56,11 @@ public class CharacterBehaviour : MonoBehaviour
     public bool IsDead
     {
         get { return m_currentLife <= 0; }
+    }
+
+    public bool IsVictory
+    {
+        get { return m_victory; }
     }
 
     private void Awake()
@@ -182,9 +194,20 @@ public class CharacterBehaviour : MonoBehaviour
 
     private bool SelectWalkTarget()
     {
+        if (m_tempVictory)
+        {
+            OnStatic();
+            m_victory = true;
+            return true;
+        }
         OnWalk();
         
         var movingSideWalkAt = GameSingleton.Instance.GetMovingSideWalkAt(m_positionInt);
+        var endProperty = GameSingleton.Instance.GridInformation.GetPositionProperty(Helper.ToVector3Int(m_positionInt),TilemapProperty.EndProperty, 0);
+        if (endProperty == 1)
+        {
+            m_tempVictory = true;
+        }
         if (movingSideWalkAt == null)
         {
             Debug.LogError("Impossible move at " + m_positionInt);
@@ -203,6 +226,12 @@ public class CharacterBehaviour : MonoBehaviour
     {
         m_currentLife -= mDamage;
         // todo jouer FX de dégâts
+        OnHit();
+    }
+
+    private void OnHit()
+    {
+        m_animator.SetTrigger("hit");
     }
 
     public void OnDeath()

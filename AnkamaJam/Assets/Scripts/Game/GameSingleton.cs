@@ -1,7 +1,10 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class GameSingleton : MonoBehaviour
 {
@@ -15,6 +18,32 @@ public class GameSingleton : MonoBehaviour
     public InputManager InputManager;
 
     public float LogicFps = 30;
+
+    public GameObject OverhadFeedbackPrefab;
+
+    private const long BaseReputation = 100;
+    private long _reputation;
+
+    public long Reputation
+    {
+        get
+        {
+            return _reputation;
+        }
+        set { _reputation = (long) Mathf.Max(_reputation, 0); }
+    }
+
+    private const long MaxSouls = 1000;
+    private long _souls;
+
+    public long Souls
+    {
+        get { return _souls; }
+        set { _souls = (long) Mathf.Min(_souls, MaxSouls); }
+    }
+    
+    public bool IsGameOver { get { return _reputation <= 0; } }
+    
     
     private void Awake()
     {
@@ -24,16 +53,18 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnTrapCell += OnTrapCell;
+        _reputation = BaseReputation;
     }
-    
+
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
     private readonly List<Trap> m_traps = new List<Trap>();
     private float _lastTick;
     private float _tickInterval;
+    private bool _gameOverLaunched;
 
     public void OnTrapCell(Vector3Int position)
     {
-        var pos = new Vector2Int(position.x, position.y);
+        /*var pos = new Vector2Int(position.x, position.y);
         if (!TrapExistsAt(pos))
         {
             var trap = TrapManager.SpawnRandomTrap(position);
@@ -43,7 +74,7 @@ public class GameSingleton : MonoBehaviour
         else
         {
             Debug.Log("A trap is already present at the position.");
-        }
+        }*/
     }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
@@ -72,6 +103,14 @@ public class GameSingleton : MonoBehaviour
     
    public void GameLoop()
     {
+        if (_gameOverLaunched)
+            return;
+        if (IsGameOver)
+        {
+            OnGameOver();
+            return;
+        }
+        
         var spawnedCharacters = CharacterSpawner.SpawnCharacterLoop();
         m_characters.AddRange(spawnedCharacters);
 
@@ -88,13 +127,69 @@ public class GameSingleton : MonoBehaviour
             {
                 Debug.Log("Character Dead " + c);
                 c.OnDeath();
+                ComputeCharacterDeath(c);
                 m_characters.RemoveAt(i);
+            } else if (c.IsVictory)
+            {
+                OnCharacterVictory(c);
+                m_characters.RemoveAt(i);
+                Destroy(c.gameObject);
             }
             else
             {
                 c.MoveLoop();   
             }
         }
+    }
+
+    private void OnGameOver()
+    {
+        _gameOverLaunched = true;
+        
+        // todo score et compagnie !
+        var showPanels = SceneHandler.Instance.gameObject.GetComponent<ShowPanels>();
+        SceneHandler.Instance.Load(SceneHandler.StartScene, () => showPanels.ShowMenu());
+    }
+
+    private void OnCharacterVictory(CharacterBehaviour characterBehaviour)
+    {
+        Reputation--;
+        var sourcePosition = characterBehaviour.transform.position;
+        
+        var text = "Victory !!!";
+        LaunchOverheadFeedback(text, Color.yellow,sourcePosition);
+    }
+
+    private void ComputeCharacterDeath(CharacterBehaviour characterBehaviour)
+    {
+        var modelSoul = characterBehaviour.Model.Soul;
+        var sourcePosition = characterBehaviour.transform.position;
+        
+        OnSoulModified(modelSoul, sourcePosition);
+    }
+
+    public void OnSoulModified(int soulDelta, Vector3 sourcePosition)
+    {
+        Souls += soulDelta;
+
+        var text = (soulDelta >= 0 ? "+ " : "- ") + soulDelta;
+        LaunchOverheadFeedback(text, Color.cyan,sourcePosition);
+    }
+
+    private void LaunchOverheadFeedback(string text, Color color, Vector3 sourcePosition)
+    {
+        GameObject soulGain = Instantiate(OverhadFeedbackPrefab);
+
+        soulGain.transform.position = sourcePosition + Vector3.up * 0.5f;
+
+        soulGain.transform.DOLocalMoveY(soulGain.transform.position.y + 0.5f, 1f);
+        var componentInChildren = soulGain.GetComponent<Text>();
+        componentInChildren.text = text;
+        componentInChildren.color = color;
+        componentInChildren.DOFade(1f, 0.5f).OnComplete(() =>
+        {
+            componentInChildren.DOFade(0f, 0.5f).OnComplete(() => Destroy(soulGain));
+        });
     }
 
     public MovingSidewalk GetMovingSideWalkAt(Vector2Int mPositionInt)
@@ -114,5 +209,30 @@ public class GameSingleton : MonoBehaviour
     public Vector3Int[] GetSpawnPosition()
     {
         return GridInformation.GetAllPositions(TilemapProperty.StartProperty);
+    }
+
+    public bool CanSpawnTrapAt(TrapModel model, Vector3Int position)
+    {
+        var positions = Helper.ToVector3Int(model.ActivationPositions(new Vector2Int(position.x, position.y)));
+        var trapPositions = GridInformation.GetAllPositions(TilemapProperty.TrapProperty);
+
+        if (!positions.All((pos) => trapPositions.Contains(pos)))
+            return false;
+
+        List<Vector3Int> allTrapsPositions = new List<Vector3Int>();
+        m_traps.ForEach((t) => allTrapsPositions.AddRange(Helper.ToVector3Int(t.ActivationPositions)));
+        return !positions.Any((pos) => allTrapsPositions.Contains(pos));
+
+    }
+
+    public void RequestSpawnAt(TrapModel model, Vector3Int position)
+    {
+        if (!CanSpawnTrapAt(model, position))
+            return;
+        // Check souls
+        var trap = TrapManager.SpawnTrap(model, position);
+        if (trap != null)
+            m_traps.Add(trap);
+        
     }
 }
