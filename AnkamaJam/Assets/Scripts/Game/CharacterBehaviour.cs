@@ -252,7 +252,9 @@ public class CharacterBehaviour : MonoBehaviour
         _talking = true;
         
         _bubbleInstance.gameObject.SetActive(true);
-        var randomSentence = m_model.RandomSentences[Helper.random(m_model.RandomSentences.Length)];
+        var sentence = m_model.SpecialTalks.Count > 0 ?  m_model.SpecialTalks[Helper.random(m_model.SpecialTalks.Count)] :
+            m_model.RandomSentences[Helper.random(m_model.RandomSentences.Length)];
+        var randomSentence = sentence;
         _bubbleInstance.GetComponentInChildren<Text>().text =
             randomSentence;
 

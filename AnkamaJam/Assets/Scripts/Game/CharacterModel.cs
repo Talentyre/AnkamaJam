@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterModel : MonoBehaviour
 {
@@ -69,6 +70,8 @@ public class CharacterModel : MonoBehaviour
         "Je suis pas venu içi pour souffrir okay !?",
         "J'ai un mauvais pressentiment",
     };
+
+    public List<string> SpecialTalks = new List<string>();
     
     public string[] RandomSentences {get { return m_randomSentences; }}
     
