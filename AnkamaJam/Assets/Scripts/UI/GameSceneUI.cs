@@ -35,7 +35,7 @@ public class GameSceneUI : MonoBehaviour
 			SoulText.text = f.ToString();
 			var percent = (float)f/GameSingleton.MaxSouls;
 			SoulGauge.rectTransform.sizeDelta = new Vector2(_soulGaugeBaseSizeDelta.x, _soulGaugeBaseSizeDelta.y*percent);
-			SoulGauge.fillAmount = percent;
+			//SoulGauge.fillAmount = percent;
 		};
 		GameSingleton.Instance.OnComboUpdate += f =>
 		{
