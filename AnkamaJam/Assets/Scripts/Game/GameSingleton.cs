@@ -68,7 +68,7 @@ public class GameSingleton : MonoBehaviour
         }
     }
     
-    public bool IsGameOver { get { return _alert <= 0; } }
+    public bool IsGameOver { get { return _alert >= MaxAlert; } }
     
     
     private void Awake()
@@ -79,7 +79,6 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnTrapCell += OnTrapCell;
-        _alert = MaxAlert;
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
