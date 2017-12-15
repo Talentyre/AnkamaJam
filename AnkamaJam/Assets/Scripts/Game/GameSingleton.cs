@@ -42,6 +42,8 @@ public class GameSingleton : MonoBehaviour
         set { _souls = (long) Mathf.Min(_souls, MaxSouls); }
     }
     
+    public bool IsGameOver { get { return _reputation <= 0; } }
+    
     
     private void Awake()
     {
@@ -58,6 +60,7 @@ public class GameSingleton : MonoBehaviour
     private readonly List<Trap> m_traps = new List<Trap>();
     private float _lastTick;
     private float _tickInterval;
+    private bool _gameOverLaunched;
 
     public void OnTrapCell(Vector3Int position)
     {
@@ -100,6 +103,14 @@ public class GameSingleton : MonoBehaviour
     
    public void GameLoop()
     {
+        if (_gameOverLaunched)
+            return;
+        if (IsGameOver)
+        {
+            OnGameOver();
+            return;
+        }
+        
         var spawnedCharacters = CharacterSpawner.SpawnCharacterLoop();
         m_characters.AddRange(spawnedCharacters);
 
@@ -129,6 +140,15 @@ public class GameSingleton : MonoBehaviour
                 c.MoveLoop();   
             }
         }
+    }
+
+    private void OnGameOver()
+    {
+        _gameOverLaunched = true;
+        
+        // todo score et compagnie !
+        var showPanels = SceneHandler.Instance.gameObject.GetComponent<ShowPanels>();
+        SceneHandler.Instance.Load(SceneHandler.StartScene, () => showPanels.ShowMenu());
     }
 
     private void OnCharacterVictory(CharacterBehaviour characterBehaviour)
