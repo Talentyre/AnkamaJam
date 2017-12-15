@@ -13,10 +13,14 @@ public class GameSceneUI : MonoBehaviour
 	public Image SoulGauge;
 	public Image AlertGauge;
 	private Tweener _alertTweener;
+	private Vector2 _soulGaugeBaseSizeDelta;
 
 	// Use this for initialization
 	void Start ()
 	{
+		_soulGaugeBaseSizeDelta = SoulGauge.rectTransform.sizeDelta;
+		SoulGauge.rectTransform.sizeDelta = new Vector2(_soulGaugeBaseSizeDelta.x, 0);
+		
 		var doPunchScale = ComboText.transform.DOPunchScale(Vector3.one * 0.1f, 0.25f).Pause();
 		GameSingleton.Instance.OnAlertUpdate += f =>
 		{
@@ -29,7 +33,9 @@ public class GameSceneUI : MonoBehaviour
 		GameSingleton.Instance.OnSoulUpdate += f =>
 		{
 			SoulText.text = f.ToString();
-			SoulGauge.fillAmount = (float)f/GameSingleton.MaxSouls;
+			var percent = (float)f/GameSingleton.MaxSouls;
+			SoulGauge.rectTransform.sizeDelta = new Vector2(_soulGaugeBaseSizeDelta.x, _soulGaugeBaseSizeDelta.y*percent);
+			SoulGauge.fillAmount = percent;
 		};
 		GameSingleton.Instance.OnComboUpdate += f =>
 		{
