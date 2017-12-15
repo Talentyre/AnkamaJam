@@ -11,11 +11,21 @@ public class GameSceneUI : MonoBehaviour
 	public Text ComboText;
 	public Text SoulText;
 	public Image SoulGauge;
-	
+	public Image AlertGauge;
+	private Tweener _alertTweener;
+
 	// Use this for initialization
 	void Start ()
 	{
 		var doPunchScale = ComboText.transform.DOPunchScale(Vector3.one * 0.1f, 0.25f).Pause();
+		GameSingleton.Instance.OnAlertUpdate += f =>
+		{
+			AlertGauge.fillAmount = (float)f/GameSingleton.MaxAlert;
+			if (AlertGauge.fillAmount > 0.9 && _alertTweener == null)
+			{
+				_alertTweener = AlertGauge.DOFade(0f, 1f).OnComplete(() => AlertGauge.DOFade(1f, 1f)).SetLoops(-1);
+			}
+		};
 		GameSingleton.Instance.OnSoulUpdate += f =>
 		{
 			SoulText.text = f.ToString();

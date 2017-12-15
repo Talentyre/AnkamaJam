@@ -23,7 +23,7 @@ public class GameSingleton : MonoBehaviour
 
     public GameObject OverhadFeedbackPrefab;
 
-    private const long MaxAlert = 100;
+    public const long MaxAlert = 100;
     private long _alert;
 
     public long Alert
@@ -32,7 +32,12 @@ public class GameSingleton : MonoBehaviour
         {
             return _alert;
         }
-        set { _alert = (long) Mathf.Min(value, MaxAlert); }
+        set
+        {
+            _alert = (long) Mathf.Min(value, MaxAlert);
+            if (OnAlertUpdate != null)
+                OnAlertUpdate(_alert);
+        }
     }
 
     public const long MaxSouls = 100;
@@ -58,7 +63,8 @@ public class GameSingleton : MonoBehaviour
         set
         {
             _score = value;
-            OnScoreUpdate(_score);
+            if (OnScoreUpdate != null)
+                OnScoreUpdate(_score);
         }
     }
     
@@ -84,6 +90,7 @@ public class GameSingleton : MonoBehaviour
     public Action<long> OnSoulUpdate;
     public Action<int> OnComboUpdate;
     public Action<long> OnScoreUpdate;
+    public Action<long> OnAlertUpdate;
 
     private int _combo;
     private const float ComboBaseDuration = 5;
