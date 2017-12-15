@@ -79,6 +79,7 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
+        BeginDrag(false);
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
@@ -293,6 +294,6 @@ public class GameSingleton : MonoBehaviour
 
     public void BeginDrag(bool drag)
     {
-        TrapTilemap.color = drag ? Color.white : new Color(1f, 1f, 1f, 0.3f);
+        TrapTilemap.color = drag ? Color.white : new Color(1f,1f,1f,0f);
     }
 }
