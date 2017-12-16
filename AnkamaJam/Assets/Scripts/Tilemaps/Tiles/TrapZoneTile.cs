@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -28,3 +27,4 @@ public class TrapZoneTile : TileBase {
         tileData.flags = TileFlags.LockAll;
 	}
 }
+#endif

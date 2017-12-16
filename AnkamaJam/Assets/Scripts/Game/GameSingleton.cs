@@ -29,7 +29,7 @@ public class GameSingleton : MonoBehaviour
 
     public Tilemap TrapTilemap;
 
-    public const long MaxAlert = 100;
+    public const long MaxAlert = 0;
     private long _alert;
 
     public long Alert

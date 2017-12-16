@@ -1,4 +1,5 @@
-﻿using UnityEditor;
+﻿#if UNITY_EDITOR
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -56,3 +57,4 @@ public class TrapZoneBrush : GridBrushBase
         return go != null ? go.GetComponent<Tilemap>() : null;
     }
 }
+#endif

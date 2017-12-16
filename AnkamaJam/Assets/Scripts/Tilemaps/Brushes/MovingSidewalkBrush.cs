@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -57,3 +56,4 @@ public class MovingSidewalkBrush : GridBrushBase
     }
 #endif
 }
+#endif

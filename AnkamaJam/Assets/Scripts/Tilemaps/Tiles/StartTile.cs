@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#if UNITY_EDITOR
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
@@ -41,3 +40,4 @@ public class StartTile : TileBase {
         tileData.flags = TileFlags.LockAll;
 	}
 }
+#endif

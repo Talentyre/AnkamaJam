@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEditor;
-
-public enum TrapAOE 
+﻿public enum TrapAOE 
 {
     Point,
     LittleLineHorizontal,
