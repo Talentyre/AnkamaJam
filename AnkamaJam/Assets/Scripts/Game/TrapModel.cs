@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 
 public abstract class TrapModel : MonoBehaviour
@@ -21,6 +22,9 @@ public abstract class TrapModel : MonoBehaviour
     private int m_souls;
     [SerializeField]
     private bool m_automatic = true;
+    [SerializeField]
+    private Image m_cooldownImage;
+
 
     public int Cooldown { get { return m_cooldown; } }
     public int Souls { get { return m_souls; } }
@@ -60,6 +64,7 @@ public abstract class TrapModel : MonoBehaviour
     public abstract void Activate(CharacterBehaviour c);
 
     public Animator Animator { get { return m_animator; } }
+    public Image CooldownImage { get { return m_cooldownImage; } }
 
     public float Delay
     {
