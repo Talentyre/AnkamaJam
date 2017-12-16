@@ -10,7 +10,7 @@ public class CharacterSpawner : MonoBehaviour
 	public List<CharacterModel> CharacterModels;
 	private Dictionary<CharacterModel, float> m_charactersNextSpawn = new Dictionary<CharacterModel, float>();
 	private Vector3Int[] _spawnPositions;
-	private const float MinSpawnInterval = 1f;
+	private const float MinSpawnInterval = 5f;
 	private const float MaxDuration = 60 * 2;
 	private float _currentDuration;
 
@@ -28,7 +28,8 @@ public class CharacterSpawner : MonoBehaviour
 
 	private void Update()
 	{
-		_currentDuration -= Time.deltaTime;
+		if (_currentDuration > 0)
+			_currentDuration -= Time.deltaTime;
 	}
 	
 	public List<CharacterBehaviour> SpawnCharacterLoop()
@@ -42,7 +43,7 @@ public class CharacterSpawner : MonoBehaviour
 			{
 				var position = _spawnPositions[Helper.random(_spawnPositions.Length)];
 				characterBehaviours.Add(SpawnCharacter(model, position));
-				m_charactersNextSpawn[model] = Time.time + MinSpawnInterval + model.SpawnInterval*(_currentDuration/MaxDuration);
+				m_charactersNextSpawn[model] = Time.time + Mathf.Max(MinSpawnInterval,model.SpawnInterval*(_currentDuration/MaxDuration));
 			}
 		}
 		return characterBehaviours;
