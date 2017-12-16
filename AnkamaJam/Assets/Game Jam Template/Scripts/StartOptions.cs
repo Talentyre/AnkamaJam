@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using DG.Tweening;
 using UnityEngine.Audio;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class StartOptions : MonoBehaviour {
@@ -19,6 +21,7 @@ public class StartOptions : MonoBehaviour {
 	 public AnimationClip fadeColorAnimationClip;		//Animation clip fading to color (black default) when changing scenes
 	[HideInInspector] public AnimationClip fadeAlphaAnimationClip;		//Animation clip fading out UI elements alpha
 
+	public RectTransform Title;
 
 	private PlayMusic playMusic;										//Reference to PlayMusic script
 	private float fastFadeIn = .01f;									//Very short fade time (10 milliseconds) to start playing music immediately without a click/glitch
@@ -32,6 +35,11 @@ public class StartOptions : MonoBehaviour {
 
 		//Get a reference to PlayMusic attached to UI object
 		playMusic = GetComponent<PlayMusic> ();
+
+		var y = Title.anchoredPosition.y;
+		var sequence = DOTween.Sequence();
+		sequence.Append(Title.DOAnchorPosY(y+50, 3f).SetEase(Ease.InOutSine))
+			.Append(Title.DOAnchorPosY(y, 4f).SetEase(Ease.InOutSine)).SetLoops(-1);
 	}
 
 

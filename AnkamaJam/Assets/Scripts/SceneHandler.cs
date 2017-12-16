@@ -10,6 +10,7 @@ public class SceneHandler : MonoBehaviour
 
     public const string StartScene = "Scenes/Start";
     public const string Game = "Scenes/Game";
+    public const string GameOver = "Scenes/GameOver";
 
     public static bool LoadingScene;
     private ScreenFader _screenFader;

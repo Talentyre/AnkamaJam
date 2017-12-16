@@ -195,7 +195,7 @@ public class GameSingleton : MonoBehaviour
 
         // todo score et compagnie !
         var showPanels = SceneHandler.Instance.gameObject.GetComponent<ShowPanels>();
-        SceneHandler.Instance.Load(SceneHandler.StartScene, () => showPanels.ShowMenu());
+        SceneHandler.Instance.Load(SceneHandler.GameOver);
     }
 
     private void OnCharacterVictory(CharacterBehaviour characterBehaviour)
