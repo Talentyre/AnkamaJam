@@ -88,6 +88,7 @@ public class GameSingleton : MonoBehaviour
     private float _lastTick;
     private float _tickInterval;
     private bool _gameOverLaunched;
+    public Action OnSoulGain;
     public Action<long> OnSoulUpdate;
     public Action<int> OnComboUpdate;
     public Action<long> OnScoreUpdate;
@@ -228,6 +229,8 @@ public class GameSingleton : MonoBehaviour
         Souls += soulDelta;
         if (OnSoulUpdate != null)
             OnSoulUpdate(Souls);
+        if (soulDelta > 0 && OnSoulGain != null)
+            OnSoulGain();
 
         var text = (soulDelta >= 0 ? "+ " : "") + soulDelta;
         LaunchOverheadFeedback(text, Color.cyan, sourcePosition);

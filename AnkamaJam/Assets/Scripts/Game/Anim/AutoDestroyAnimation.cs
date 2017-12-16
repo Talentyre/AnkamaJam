@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class AutoDestroyAnimation : MonoBehaviour {
-	private float m_lifetime = 3f;
+	public float m_lifetime = 3f;
 	private int m_checkFrameInterval = 30;
 	private Animator[] m_animators;
 
