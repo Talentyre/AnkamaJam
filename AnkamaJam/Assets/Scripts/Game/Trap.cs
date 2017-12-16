@@ -16,6 +16,24 @@ public class Trap : MonoBehaviour
     public Vector2Int Position { get { return m_position; } }
     public List<Vector2Int> ActivationPositions { get { return m_activationPositions; } }
 
+    public float CooldownPercentage
+    {
+        get
+        {
+            if (m_model.Cooldown <= 0)
+                return 1;
+            var endTime = m_nextActivation;
+            var startTime = m_nextActivation - m_model.Cooldown;
+            var elapsedTime = Time.realtimeSinceStartup - startTime;
+            return elapsedTime / m_model.Cooldown;
+        }
+    }
+
+    public void UpdateCooldownProgressBar()
+    {
+        m_model.CooldownImage.fillAmount = CooldownPercentage;
+    }
+
     public void Init(TrapModel model, Vector3Int position)
     {
         m_model = model;
@@ -32,6 +50,7 @@ public class Trap : MonoBehaviour
     {
         var cooldown = IsInCooldown;
         m_model.Animator.SetBool("Cooldown", cooldown);
+        UpdateCooldownProgressBar();
 
         if (automatic != m_model.Automatic)
             return;
