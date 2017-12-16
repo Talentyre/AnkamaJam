@@ -81,6 +81,8 @@ public class GameSingleton : MonoBehaviour
         InputManager.OnCellClick += OnCellClick;
         BeginDrag(false);
         Souls = 10;
+
+        CharacterBehaviour.BubbleCount = 0;
     }
 
     private readonly List<CharacterBehaviour> m_characters = new List<CharacterBehaviour>();
