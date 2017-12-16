@@ -1,6 +1,8 @@
 # AnkamaJam
 Repo pour la game jam Ankama
 
+![ScreenShot](https://raw.githubusercontent.com/Talentyre/AnkamaJam/blob/master/courage-maroilles!.png)
+
 ## Setup
 Voici les instructions d'installation, si vous avez un souci, n'hésitez pas à contacter soit Clément Corvisy ou Olivier Léonard.
 
