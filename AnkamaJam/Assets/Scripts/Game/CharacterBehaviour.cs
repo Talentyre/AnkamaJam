@@ -120,10 +120,12 @@ public class CharacterBehaviour : MonoBehaviour
         m_characterStatesEnum = CharacterStatesEnum.WALKING;
     }
     
-    public void OnElectrocute(float duration)
+    public void OnElectrocute(float duration, int damage)
     {
+        m_currentLife -= damage; 
+       
         m_characterStatesEnum = CharacterStatesEnum.STUN;
-        m_animator.SetTrigger("Electrocute");
+        m_animator.SetTrigger("electrocute");
         m_stunEnd = Time.time + duration;
         
         m_target = null;

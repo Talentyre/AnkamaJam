@@ -8,12 +8,22 @@ public class ElectricTrap : DamageTrap
 
     public override void Activate(CharacterBehaviour character)
     {
-        var randomPrefab = ElectricFXs[Helper.random(ElectricFXs.Count)];
-        GameObject go = Instantiate(randomPrefab);
-        go.transform.position = character.transform.position + Vector3.down * 0.5f;
+        for (int i = 0; i < Random.Range(6, 10); i++)
+        {
+            var randomPrefab = ElectricFXs[Helper.random(ElectricFXs.Count)];
+            GameObject go = Instantiate(randomPrefab);
+            go.transform.position = transform.position +  new Vector3(Random.Range(-0.25f,2f),Random.Range(0f,1f),0);  
+            
+        }
+        for (int i = 0; i < Random.Range(3, 6); i++)
+        {
+            var randomPrefab = ElectricFXs[Helper.random(ElectricFXs.Count)];
+            GameObject go = Instantiate(randomPrefab);
+            var r = Random.insideUnitCircle;
+            go.transform.position = character.transform.position +  new Vector3(r.x,r.y,0)*0.7f;   
+        }
 
-        character.OnElectrocute(0.5f);
+        character.OnElectrocute(1f, Damage);
 
-        base.Activate(character);
     }
 }
