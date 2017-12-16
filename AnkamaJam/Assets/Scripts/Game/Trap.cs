@@ -30,11 +30,11 @@ public class Trap : MonoBehaviour
 
     public void Act(bool automatic = true)
     {
-        if (automatic != m_model.Automatic)
-            return;
-
         var cooldown = IsInCooldown;
         m_model.Animator.SetBool("Cooldown", cooldown);
+
+        if (automatic != m_model.Automatic)
+            return;
 
         if (IsInCooldown)
             return;
