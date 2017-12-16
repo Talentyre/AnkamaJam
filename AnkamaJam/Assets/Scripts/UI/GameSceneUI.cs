@@ -53,13 +53,9 @@ public class GameSceneUI : MonoBehaviour
 		{
 			StartCoroutine(SoulGainFeedback());
 		};
-		GameSingleton.Instance.OnSoulUpdate += f =>
-		{
-			SoulText.text = f.ToString();
-			var percent = (float)f/GameSingleton.MaxSouls;
-			SoulGauge.rectTransform.sizeDelta = new Vector2(_soulGaugeBaseSizeDelta.x, _soulGaugeBaseSizeDelta.y*percent);
-			//SoulGauge.fillAmount = percent;
-		};
+
+		UpdateSoul(GameSingleton.Instance.Souls);
+		GameSingleton.Instance.OnSoulUpdate += UpdateSoul;
 		GameSingleton.Instance.OnComboUpdate += f =>
 		{
 			if (f > 1)
@@ -76,6 +72,13 @@ public class GameSceneUI : MonoBehaviour
 		{
 			ScoreText.text = f.ToString();
 		};
+	}
+
+	private void UpdateSoul(long soul)
+	{
+		SoulText.text = soul.ToString();
+		var percent = (float)soul/GameSingleton.MaxSouls;
+		SoulGauge.rectTransform.sizeDelta = new Vector2(_soulGaugeBaseSizeDelta.x, _soulGaugeBaseSizeDelta.y*percent);
 	}
 
 	private IEnumerator SoulGainFeedback()
