@@ -62,11 +62,17 @@ public class PlayMusic : MonoBehaviour {
 		//if musicChoice is 0 assigns titleMusic to audio source
 		case 0:
 			musicSource.clip = titleMusic;
+			musicSource.loop = true;
 			break;
 			//if musicChoice is 1 assigns mainMusic to audio source
 		case 1:
 			musicSource.clip = mainMusic;
+			musicSource.loop = true;
 			break;
+			case 2:
+				musicSource.clip = gameOverMusic;
+				musicSource.loop = false;
+				break;
 		}
 		//Play the selected clip
 		musicSource.Play ();
