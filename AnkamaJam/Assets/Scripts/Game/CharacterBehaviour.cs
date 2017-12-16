@@ -98,6 +98,8 @@ public class CharacterBehaviour : MonoBehaviour
     }
 
     private Coroutine m_currentCoroutine = null;
+    public static int BubbleCount;
+
     private void StartMovementCoroutine(IEnumerator routine)
     {
         if (m_currentCoroutine != null)
@@ -255,12 +257,18 @@ public class CharacterBehaviour : MonoBehaviour
 
     private void OnTalk()
     {
+        RefreshNextTalkTime();
+        if (BubbleCount >= 2)
+            return;
+        
         if (_bubbleInstance == null)
         {
             _bubbleInstance = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Bubble"), transform);
             _bubbleInstance.transform.localPosition = Vector3.zero;
         }
         _talking = true;
+
+        BubbleCount++;
         
         _bubbleInstance.gameObject.SetActive(true);
         var sentence = m_model.SpecialTalks.Count > 0 ?  m_model.SpecialTalks[Helper.random(m_model.SpecialTalks.Count)] :
@@ -277,7 +285,8 @@ public class CharacterBehaviour : MonoBehaviour
         yield return new WaitForSeconds(randomSentenceLength*0.1f);
         _bubbleInstance.gameObject.SetActive(false);
         _talking = false;
-        RefreshNextTalkTime();
+        
+        BubbleCount--;
     }
 
     private bool SelectWalkTarget()
