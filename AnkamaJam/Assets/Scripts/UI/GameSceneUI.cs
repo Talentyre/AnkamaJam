@@ -16,6 +16,8 @@ public class GameSceneUI : MonoBehaviour
 	public Image AlertGauge3;
 	public Image AlertGauge4;
 	public Image AlertGauge5;
+	public Transform SoulGainParent;
+	public GameObject SoulGainFxPrefab;
 	private Tweener _alertTweener;
 	private Vector2 _soulGaugeBaseSizeDelta;
 	private Image _lastAlertGaugeActivated;
@@ -47,6 +49,10 @@ public class GameSceneUI : MonoBehaviour
 				}	
 			}
 		};
+		GameSingleton.Instance.OnSoulGain += () =>
+		{
+			StartCoroutine(SoulGainFeedback());
+		};
 		GameSingleton.Instance.OnSoulUpdate += f =>
 		{
 			SoulText.text = f.ToString();
@@ -70,6 +76,15 @@ public class GameSceneUI : MonoBehaviour
 		{
 			ScoreText.text = f.ToString();
 		};
+	}
+
+	private IEnumerator SoulGainFeedback()
+	{
+		yield return new WaitForSeconds(1f);
+		GameObject go = Instantiate(SoulGainFxPrefab);
+		go.transform.SetParent(SoulGainParent);
+		go.transform.localScale = new Vector3(Random.Range(0, 2) == 0 ? 1 : -1, 1, 1);
+		go.transform.localPosition = Vector3.zero;
 	}
 
 	public Image GetAlerteGaugeToBlink(float percent)
