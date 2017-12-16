@@ -49,7 +49,7 @@ public class Trap : MonoBehaviour
     public void Act(bool automatic = true)
     {
         var cooldown = IsInCooldown;
-        m_model.Animator.SetBool("Cooldown", cooldown);
+        m_model.Animators.ForEach(a => a.SetBool("Cooldown", cooldown));
         UpdateCooldownProgressBar();
 
         if (automatic != m_model.Automatic)
@@ -67,7 +67,7 @@ public class Trap : MonoBehaviour
             m_model.Activate(characterBehaviour);
         }
 
-        m_model.Animator.SetTrigger("TriggerTrap");
+        m_model.Animators.ForEach(a => a.SetTrigger("TriggerTrap"));
         m_nextActivation = Time.realtimeSinceStartup + m_model.Cooldown;
 	}
  

@@ -15,7 +15,7 @@ public abstract class TrapModel : MonoBehaviour
     [SerializeField]
     private TrapModel m_evolution;
     [SerializeField]
-    private Animator m_animator;
+    private List<Animator> m_animator;
     [SerializeField]
     private TrapAOE m_aoe = TrapAOE.Point;
     [SerializeField]
@@ -38,6 +38,9 @@ public abstract class TrapModel : MonoBehaviour
         switch (m_aoe)
         {
             case TrapAOE.Point:
+                break;
+            case TrapAOE.LittleLineHorizontal:
+                list.Add(pos + Vector2Int.right);
                 break;
             case TrapAOE.LineHorizontal:
                 list.Add(pos + Vector2Int.left);
@@ -63,7 +66,7 @@ public abstract class TrapModel : MonoBehaviour
 
     public abstract void Activate(CharacterBehaviour c);
 
-    public Animator Animator { get { return m_animator; } }
+    public List<Animator> Animators { get { return m_animator; } }
     public Image CooldownImage { get { return m_cooldownImage; } }
 
     public float Delay
