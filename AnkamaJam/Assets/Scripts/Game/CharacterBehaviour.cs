@@ -426,8 +426,8 @@ public class CharacterBehaviour : MonoBehaviour
     private IEnumerator VictoryCoroutine()
     {
         yield return new WaitForSeconds(2f);
-        m_spriteRenderer.DOColor(new Color(0f, 0f, 0f, 0f), 3f);
-        yield return new WaitForSeconds(3f);
+        m_spriteRenderer.DOColor(new Color(0f, 0f, 0f, 0f), 2f);
+        yield return new WaitForSeconds(2f);
         m_victory = true;
     }
 }

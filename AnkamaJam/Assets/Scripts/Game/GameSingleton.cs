@@ -80,7 +80,8 @@ public class GameSingleton : MonoBehaviour
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
         BeginDrag(false);
-        Souls = 10;
+        Souls = 5;
+        _soulGainDuration = SoulGainBaseDuration;
 
         CharacterBehaviour.BubbleCount = 0;
     }
@@ -97,8 +98,11 @@ public class GameSingleton : MonoBehaviour
     public Action<long> OnAlertUpdate;
 
     private int _combo;
-    private const float ComboBaseDuration = 5;
+    private const float ComboBaseDuration = 3;
     private float _comboDuration;
+
+    private const float SoulGainBaseDuration = 10;
+    private float _soulGainDuration;
 
     private int Combo
     {
@@ -144,6 +148,19 @@ public class GameSingleton : MonoBehaviour
             _comboDuration -= Time.deltaTime;
             if (_comboDuration <= 0)
                 Combo = 0;
+        }
+        if (_soulGainDuration > 0)
+        {
+            _soulGainDuration -= Time.deltaTime;
+            if (_soulGainDuration <= 0)
+            {
+                Souls++;
+                if (OnSoulGain != null)
+                    OnSoulGain();
+                if (OnSoulUpdate != null)
+                    OnSoulUpdate(Souls);
+                _soulGainDuration = SoulGainBaseDuration;
+            }
         }
     }
 
@@ -208,7 +225,7 @@ public class GameSingleton : MonoBehaviour
         var sourcePosition = characterBehaviour.transform.position;
 
         characterBehaviour.OnVictory();
-        
+
         var text = "Victory !!!";
         LaunchOverheadFeedback(text, Color.yellow, sourcePosition);
         StartCoroutine(ReputationFeedback(sourcePosition));
@@ -307,6 +324,6 @@ public class GameSingleton : MonoBehaviour
 
     public void BeginDrag(bool drag)
     {
-        TrapTilemap.color = drag ? Color.white : new Color(1f,1f,1f,0f);
+        TrapTilemap.color = drag ? Color.white : new Color(1f, 1f, 1f, 0f);
     }
 }
