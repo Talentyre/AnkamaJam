@@ -18,7 +18,7 @@ public class GameSceneUI : MonoBehaviour
 	public Image AlertGauge5;
 	public Transform SoulGainParent;
 	public GameObject SoulGainFxPrefab;
-	private Tweener _alertTweener;
+	private Sequence _alertTweener;
 	private Vector2 _soulGaugeBaseSizeDelta;
 	private Image _lastAlertGaugeActivated;
 
@@ -35,7 +35,10 @@ public class GameSceneUI : MonoBehaviour
 			var alerteGaugeToBlink = GetAlerteGaugeToBlink(alertPercent);
 			if (alerteGaugeToBlink != null && _alertTweener == null)
 			{
-				_alertTweener = alerteGaugeToBlink.DOFade(0f, 1f).OnComplete(() => alerteGaugeToBlink.DOFade(1f, 1f)).SetLoops(-1);
+				_alertTweener = DOTween.Sequence();
+				_alertTweener.Append(alerteGaugeToBlink.DOFade(1f, 1f).SetEase(Ease.InExpo));
+				_alertTweener.Append(alerteGaugeToBlink.DOFade(0f, 1f).SetEase(Ease.InExpo));
+				_alertTweener.SetLoops(-1);
 			}
 			else
 			{
@@ -43,8 +46,8 @@ public class GameSceneUI : MonoBehaviour
 				if (alerteGaugeToActive != null && _lastAlertGaugeActivated != alerteGaugeToActive)
 				{
 					_lastAlertGaugeActivated = alerteGaugeToActive;
+					_alertTweener.Kill();
 					_alertTweener = null;
-					alerteGaugeToActive.DOKill();
 					alerteGaugeToActive.color = Color.white;
 				}	
 			}
@@ -121,15 +124,15 @@ public class GameSceneUI : MonoBehaviour
 		{
 			return AlertGauge1;
 		}
-		if (percent < 0.6)
+		if (percent >= 0.4 && percent < 0.6)
 		{
 			return AlertGauge2;
 		}
-		if (percent < 0.8)
+		if (percent >= 0.6 && percent < 0.8)
 		{
 			return AlertGauge3;
 		}
-		if (percent < 1)
+		if (percent >= 0.8 && percent < 1)
 		{
 			return AlertGauge4;
 		}

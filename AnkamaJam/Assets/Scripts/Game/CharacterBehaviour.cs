@@ -328,7 +328,8 @@ public class CharacterBehaviour : MonoBehaviour
         if (movingSideWalkAt == null)
         {
             Debug.LogError("Impossible move at " + m_positionInt);
-            m_currentLife = 0;
+            if (!m_tempVictory)
+                m_currentLife = 0;
             return true;
         }
         var previousTarget = m_target;
