@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Xml.Schema;
+using DG.Tweening;
 using UnityEngine.UI;
 
 public class CharacterBehaviour : MonoBehaviour
@@ -36,6 +37,7 @@ public class CharacterBehaviour : MonoBehaviour
     private bool m_victory;
     private Object _bloodFxPrefab;
     private Object _deathFxPrefab;
+    private Object _loveFxPrefab;
     private int m_fearCounter;
     private float m_stunEnd;
 
@@ -62,6 +64,10 @@ public class CharacterBehaviour : MonoBehaviour
         get { return m_currentLife <= 0; }
     }
 
+    public bool IsTempVictory { get { return m_tempVictory; } }
+
+    public bool IsVictoryLaunched { get; set; }
+
     public bool IsVictory
     {
         get { return m_victory; }
@@ -80,7 +86,7 @@ public class CharacterBehaviour : MonoBehaviour
     {
         _nextStaticTime = Time.time + Random.Range(m_model.MinStaticInterval, m_model.MaxStaticInterval);
     }
-    
+
     private void RefreshNextTalkTime()
     {
         _nextTalkTime = Time.time + Random.Range(m_model.MinTalkInterval, m_model.MaxTalkInterval);
@@ -90,7 +96,7 @@ public class CharacterBehaviour : MonoBehaviour
     {
         m_positionInt = new Vector2Int(position.x, position.y);
         m_position = new Vector2(position.x, position.y);
-        m_positionWithALittleJoke =  new Vector2(position.x, position.y);
+        m_positionWithALittleJoke = new Vector2(position.x, position.y);
 
         m_model = model;
         m_currentLife = model.MaxLife;
@@ -113,6 +119,8 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void OnStun(float duration)
     {
+        if (m_tempVictory)
+            return;
         m_characterStatesEnum = CharacterStatesEnum.STUN;
         m_animator.SetBool("scared", true);
         m_stunEnd = Time.time + duration;
@@ -124,20 +132,25 @@ public class CharacterBehaviour : MonoBehaviour
         m_animator.SetBool("scared", false);
         m_characterStatesEnum = CharacterStatesEnum.WALKING;
     }
-    
+
     public void OnElectrocute(float duration, int damage)
     {
-        m_currentLife -= damage; 
-       
+        if (m_tempVictory)
+            return;
+        m_currentLife -= damage;
+
         m_characterStatesEnum = CharacterStatesEnum.STUN;
         m_animator.SetTrigger("electrocute");
         m_stunEnd = Time.time + duration;
-        
+
         m_target = null;
     }
 
     public void OnFear(int power)
     {
+        if (m_tempVictory)
+            return;
+        
         m_characterStatesEnum = CharacterStatesEnum.FEAR;
         m_animator.SetTrigger("cri");
         m_animator.SetInteger("speed", 2);
@@ -170,15 +183,16 @@ public class CharacterBehaviour : MonoBehaviour
         m_speed = m_model.Speed;
     }
 
-    public void OnStatic()
+    public void OnStatic(int maxDuration = 4)
     {
         if (m_characterStatesEnum == CharacterStatesEnum.STATIC)
             return;
         m_characterStatesEnum = CharacterStatesEnum.STATIC;
         m_animator.SetInteger("speed", 0);
         m_speed = m_model.Speed;
-        
-        StartMovementCoroutine(GoToWalk(Random.Range(3,5)));
+
+        var duration = Mathf.Min(Random.Range(2, 5), maxDuration);
+        StartMovementCoroutine(GoToWalk(duration));
     }
 
     private IEnumerator GoToWalk(float range)
@@ -195,8 +209,8 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (!_talking && Time.time > _nextTalkTime && m_characterStatesEnum == CharacterStatesEnum.STATIC)
             OnTalk();
-        
-        
+
+
         if (m_characterStatesEnum == CharacterStatesEnum.STATIC)
             return;
 
@@ -213,14 +227,15 @@ public class CharacterBehaviour : MonoBehaviour
         }
 
 
-        if (Time.time > _nextStaticTime && 
+        if (!m_tempVictory && Time.time > _nextStaticTime &&
             (m_characterStatesEnum == CharacterStatesEnum.WALKING))
         {
             OnStatic();
             return;
         }
 
-        if (m_target == null) {
+        if (m_target == null)
+        {
             switch (m_characterStatesEnum)
             {
                 case CharacterStatesEnum.WALKING:
@@ -236,14 +251,15 @@ public class CharacterBehaviour : MonoBehaviour
 
         var target = m_target.GetValueOrDefault();
         var target2 = m_targetWithALittleJoke.GetValueOrDefault();
-        
+
         m_movePercentage = Mathf.Min(1.0f, m_movePercentage + m_speed / 100f);
 
         m_position = Vector2.Lerp(m_startPosition, new Vector2(target.x, target.y), m_movePercentage);
-        m_positionWithALittleJoke = Vector2.Lerp(m_startPositionWithALittleJoke, new Vector2(target2.x, target2.y), m_movePercentage);
+        m_positionWithALittleJoke = Vector2.Lerp(m_startPositionWithALittleJoke, new Vector2(target2.x, target2.y),
+            m_movePercentage);
         m_positionInt = new Vector2Int(Mathf.RoundToInt(m_position.x), Mathf.RoundToInt(m_position.y));
 
-        var v = m_positionWithALittleJoke + Vector2.one*0.5f;
+        var v = m_positionWithALittleJoke + Vector2.one * 0.5f;
         transform.position = new Vector3(v.x, v.y, v.y);
 
         if (Mathf.Approximately(m_movePercentage, 1.0f))
@@ -260,10 +276,12 @@ public class CharacterBehaviour : MonoBehaviour
 
     private void OnTalk()
     {
+        if (m_tempVictory)
+            return;
         RefreshNextTalkTime();
         if (BubbleCount >= 2)
             return;
-        
+
         if (_bubbleInstance == null)
         {
             _bubbleInstance = Instantiate(Resources.Load<GameObject>("Prefabs/UI/Bubble"), transform);
@@ -272,10 +290,11 @@ public class CharacterBehaviour : MonoBehaviour
         _talking = true;
 
         BubbleCount++;
-        
+
         _bubbleInstance.gameObject.SetActive(true);
-        var sentence = m_model.SpecialTalks.Count > 0 ?  m_model.SpecialTalks[Helper.random(m_model.SpecialTalks.Count)] :
-            m_model.RandomSentences[Helper.random(m_model.RandomSentences.Length)];
+        var sentence = m_model.SpecialTalks.Count > 0
+            ? m_model.SpecialTalks[Helper.random(m_model.SpecialTalks.Count)]
+            : m_model.RandomSentences[Helper.random(m_model.RandomSentences.Length)];
         var randomSentence = sentence;
         _bubbleInstance.GetComponentInChildren<Text>().text =
             randomSentence;
@@ -285,28 +304,25 @@ public class CharacterBehaviour : MonoBehaviour
 
     private IEnumerator CloseBubble(int randomSentenceLength)
     {
-        yield return new WaitForSeconds(randomSentenceLength*0.1f);
+        yield return new WaitForSeconds(randomSentenceLength * 0.1f);
         _bubbleInstance.gameObject.SetActive(false);
         _talking = false;
-        
+
         BubbleCount--;
     }
 
     private bool SelectWalkTarget()
     {
-        if (m_tempVictory)
-        {
-            OnStatic();
-            m_victory = true;
-            return true;
-        }
         OnWalk();
-        
+
         var movingSideWalkAt = GameSingleton.Instance.GetMovingSideWalkAt(m_positionInt);
-        var endProperty = GameSingleton.Instance.GridInformation.GetPositionProperty(Helper.ToVector3Int(m_positionInt),TilemapProperty.EndProperty, 0);
-        if (endProperty == 1)
+        var endProperty = GameSingleton.Instance.GridInformation.GetPositionProperty(Helper.ToVector3Int(m_positionInt),
+            TilemapProperty.EndProperty, 0);
+        if (endProperty == 1 && !m_tempVictory)
         {
             m_tempVictory = true;
+            OnStatic(2);
+            return true;
         }
         if (movingSideWalkAt == null)
         {
@@ -345,7 +361,7 @@ public class CharacterBehaviour : MonoBehaviour
 
         m_fearCounter--;
 
-        var previousTarget = m_target; 
+        var previousTarget = m_target;
         m_target = m_positionInt + MovingSidewalk.GetVector2IntFromDirection(movingSideWalkAt.PickEntrance());
         ChangeDirectionByTarget(previousTarget, m_target);
         m_targetWithALittleJoke = m_target + Random.insideUnitCircle * 0.3f;
@@ -359,7 +375,7 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (previousTarget == null || nextTarget == null)
             return;
-        if (Mathf.Approximately(nextTarget.GetValueOrDefault().x,previousTarget.GetValueOrDefault().x))
+        if (Mathf.Approximately(nextTarget.GetValueOrDefault().x, previousTarget.GetValueOrDefault().x))
             return;
         m_spriteRenderer.flipX = nextTarget.GetValueOrDefault().x < previousTarget.GetValueOrDefault().x;
     }
@@ -373,14 +389,34 @@ public class CharacterBehaviour : MonoBehaviour
     private void OnHit()
     {
         m_animator.SetTrigger("hit");
-        GameObject bloodFx = (GameObject)Instantiate(_bloodFxPrefab);
+        GameObject bloodFx = (GameObject) Instantiate(_bloodFxPrefab);
         bloodFx.transform.position = transform.position;
     }
 
     public void OnDeath()
     {
         Destroy(gameObject);
-        GameObject deathFx = (GameObject)Instantiate(_deathFxPrefab);
-        deathFx.transform.position = transform.position + Vector3.down*0.5f;
+        GameObject deathFx = (GameObject) Instantiate(_deathFxPrefab);
+        deathFx.transform.position = transform.position + Vector3.down * 0.5f;
+    }
+
+    public void OnVictory()
+    {
+        if (_bubbleInstance != null)
+            _bubbleInstance.gameObject.SetActive(false);
+        
+        StartCoroutine(VictoryCoroutine());
+        /*
+        GameObject loveFx = (GameObject)Instantiate(_loveFxPrefab);
+        loveFx.transform.position = transform.position + Vector3.down*0.5f;
+        */
+    }
+
+    private IEnumerator VictoryCoroutine()
+    {
+        yield return new WaitForSeconds(2f);
+        m_spriteRenderer.DOColor(new Color(0f, 0f, 0f, 0f), 3f);
+        yield return new WaitForSeconds(3f);
+        m_victory = true;
     }
 }

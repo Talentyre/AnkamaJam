@@ -176,9 +176,13 @@ public class GameSingleton : MonoBehaviour
                 ComputeCharacterDeath(c);
                 m_characters.RemoveAt(i);
             }
+            else if (c.IsTempVictory && !c.IsVictoryLaunched)
+            {
+                c.IsVictoryLaunched = true;
+                OnCharacterVictory(c);
+            }
             else if (c.IsVictory)
             {
-                OnCharacterVictory(c);
                 m_characters.RemoveAt(i);
                 Destroy(c.gameObject);
             }
@@ -203,6 +207,8 @@ public class GameSingleton : MonoBehaviour
         Alert++;
         var sourcePosition = characterBehaviour.transform.position;
 
+        characterBehaviour.OnVictory();
+        
         var text = "Victory !!!";
         LaunchOverheadFeedback(text, Color.yellow, sourcePosition);
         StartCoroutine(ReputationFeedback(sourcePosition));
@@ -210,7 +216,7 @@ public class GameSingleton : MonoBehaviour
 
     private IEnumerator ReputationFeedback(Vector3 sourcePosition)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(1.5f);
         LaunchOverheadFeedback("+ 1", Color.red, sourcePosition);
     }
 
