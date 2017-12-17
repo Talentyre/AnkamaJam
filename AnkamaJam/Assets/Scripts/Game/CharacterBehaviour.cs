@@ -324,6 +324,7 @@ public class CharacterBehaviour : MonoBehaviour
             OnStatic(2);
             return true;
         }
+        
         if (movingSideWalkAt == null)
         {
             Debug.LogError("Impossible move at " + m_positionInt);
@@ -352,6 +353,15 @@ public class CharacterBehaviour : MonoBehaviour
 
         OnRun();
 
+        var startProperty = GameSingleton.Instance.GridInformation.GetPositionProperty(Helper.ToVector3Int(m_positionInt),
+            TilemapProperty.StartProperty, 0);
+        if (startProperty == 1)
+        {
+            m_target = null;
+            OnStatic(2);
+            return true;
+        }
+        
         var movingSideWalkAt = GameSingleton.Instance.GetMovingSideWalkAt(m_positionInt);
         if (movingSideWalkAt == null)
         {
