@@ -36,6 +36,7 @@ public class CharacterBehaviour : MonoBehaviour
     private bool m_tempVictory;
     private bool m_victory;
     private Object _bloodFxPrefab;
+    private Object _bloodFx2Prefab;
     private Object _deathFxPrefab;
     private Object _loveFxPrefab;
     private int m_fearCounter;
@@ -79,6 +80,7 @@ public class CharacterBehaviour : MonoBehaviour
         m_spriteRenderer = GetComponent<SpriteRenderer>();
         m_spriteRenderer.flipX = Random.value > 0.5f;
         _bloodFxPrefab = Resources.Load("Prefabs/FX/BloodFx");
+        _bloodFx2Prefab = Resources.Load("Prefabs/FX/BloodFx2");
         _deathFxPrefab = Resources.Load("Prefabs/FX/DeathFx");
     }
 
@@ -400,8 +402,12 @@ public class CharacterBehaviour : MonoBehaviour
     private void OnHit()
     {
         m_animator.SetTrigger("hit");
-        GameObject bloodFx = (GameObject) Instantiate(_bloodFxPrefab);
-        bloodFx.transform.position = transform.position;
+        for (int i = 0; i < Random.Range(2, 5); i++)
+        {
+            GameObject bloodFx = (GameObject) Instantiate(Random.Range(0,2) == 0 ? _bloodFx2Prefab : _bloodFxPrefab);
+            var rendomVect = Random.insideUnitCircle * 0.25f;
+            bloodFx.transform.position = transform.position + Vector3.up * 0.5f + new Vector3(rendomVect.x,rendomVect.y,0);   
+        }
     }
 
     public void OnDeath()
