@@ -70,6 +70,8 @@ public class CharacterBehaviour : MonoBehaviour
     private void Awake()
     {
         m_animator = GetComponent<Animator>();
+        m_spriteRenderer = GetComponent<SpriteRenderer>();
+        m_spriteRenderer.flipX = Random.value > 0.5f;
         _bloodFxPrefab = Resources.Load("Prefabs/FX/BloodFx");
         _deathFxPrefab = Resources.Load("Prefabs/FX/DeathFx");
     }
@@ -99,6 +101,7 @@ public class CharacterBehaviour : MonoBehaviour
 
     private Coroutine m_currentCoroutine = null;
     public static int BubbleCount;
+    private SpriteRenderer m_spriteRenderer;
 
     private void StartMovementCoroutine(IEnumerator routine)
     {
@@ -311,7 +314,9 @@ public class CharacterBehaviour : MonoBehaviour
             m_currentLife = 0;
             return true;
         }
+        var previousTarget = m_target;
         m_target = m_positionInt + MovingSidewalk.GetVector2IntFromDirection(movingSideWalkAt.PickExit());
+        ChangeDirectionByTarget(previousTarget, m_target);
         m_targetWithALittleJoke = m_target + Random.insideUnitCircle * 0.3f;
         m_startPosition = m_position;
         m_startPositionWithALittleJoke = m_positionWithALittleJoke;
@@ -340,7 +345,9 @@ public class CharacterBehaviour : MonoBehaviour
 
         m_fearCounter--;
 
+        var previousTarget = m_target; 
         m_target = m_positionInt + MovingSidewalk.GetVector2IntFromDirection(movingSideWalkAt.PickEntrance());
+        ChangeDirectionByTarget(previousTarget, m_target);
         m_targetWithALittleJoke = m_target + Random.insideUnitCircle * 0.3f;
         m_startPosition = m_position;
         m_startPositionWithALittleJoke = m_positionWithALittleJoke;
@@ -348,10 +355,18 @@ public class CharacterBehaviour : MonoBehaviour
         return false;
     }
 
+    private void ChangeDirectionByTarget(Vector2? previousTarget, Vector2? nextTarget)
+    {
+        if (previousTarget == null || nextTarget == null)
+            return;
+        if (Mathf.Approximately(nextTarget.GetValueOrDefault().x,previousTarget.GetValueOrDefault().x))
+            return;
+        m_spriteRenderer.flipX = nextTarget.GetValueOrDefault().x < previousTarget.GetValueOrDefault().x;
+    }
+
     public void Damage(int mDamage)
     {
         m_currentLife -= mDamage;
-        // todo jouer FX de dégâts
         OnHit();
     }
 
