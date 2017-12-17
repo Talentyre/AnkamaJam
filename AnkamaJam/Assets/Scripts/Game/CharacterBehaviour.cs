@@ -36,6 +36,7 @@ public class CharacterBehaviour : MonoBehaviour
     private bool m_tempVictory;
     private bool m_victory;
     private Object _bloodFxPrefab;
+    private Object _stunFxPrefab;
     private Object _bloodFx2Prefab;
     private Object _deathFxPrefab;
     private Object _loveFxPrefab;
@@ -82,6 +83,7 @@ public class CharacterBehaviour : MonoBehaviour
         _bloodFxPrefab = Resources.Load("Prefabs/FX/BloodFx");
         _bloodFx2Prefab = Resources.Load("Prefabs/FX/BloodFx2");
         _deathFxPrefab = Resources.Load("Prefabs/FX/DeathFx");
+        _stunFxPrefab = Resources.Load("Prefabs/FX/StunFx");
     }
 
     private void RefreshNextStaticTime()
@@ -110,6 +112,7 @@ public class CharacterBehaviour : MonoBehaviour
     private Coroutine m_currentCoroutine = null;
     public static int BubbleCount;
     private SpriteRenderer m_spriteRenderer;
+    private GameObject _stunFx;
 
     private void StartMovementCoroutine(IEnumerator routine)
     {
@@ -123,6 +126,13 @@ public class CharacterBehaviour : MonoBehaviour
     {
         if (m_tempVictory)
             return;
+
+        if (_stunFx == null)
+        {
+            _stunFx = (GameObject) Instantiate(_stunFxPrefab);
+            _stunFx.transform.position = transform.position + Vector3.up * 0.5f;   
+        } 
+        
         m_characterStatesEnum = CharacterStatesEnum.STUN;
         m_animator.SetBool("scared", true);
         m_stunEnd = Time.time + duration;
@@ -131,6 +141,11 @@ public class CharacterBehaviour : MonoBehaviour
 
     public void OnStunEnd()
     {
+        if (_stunFx != null)
+        {
+            Destroy(_stunFx);
+            _stunFx = null;
+        } 
         m_animator.SetBool("scared", false);
         m_characterStatesEnum = CharacterStatesEnum.WALKING;
     }

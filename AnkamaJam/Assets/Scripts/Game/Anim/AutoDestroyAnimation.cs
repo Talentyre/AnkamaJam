@@ -20,7 +20,7 @@ public class AutoDestroyAnimation : MonoBehaviour {
 			yield return new WaitForSeconds(m_lifetime);
 		}
 		
-		while(!IsAnyAnimatorPlaying())
+		while(IsAnyAnimatorPlaying())
 		{
 			int frameBuffer = m_checkFrameInterval;
 			do
