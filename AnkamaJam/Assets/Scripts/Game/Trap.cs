@@ -84,5 +84,17 @@ public class Trap : MonoBehaviour
     {
         GameSingleton.Instance.OnSoulModified(-Model.Souls,transform.position);
     }
-    
+
+    public void Unhighlight()
+    {
+        m_model.Highlight.Unhighlight();
+    }
+
+    public void Highlight(bool effects, bool blocks)
+    {
+        m_model.Highlight.DoHighlight(effects, blocks);
+    }
+
+
+
 }

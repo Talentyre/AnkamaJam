@@ -56,7 +56,9 @@ public class TrapManager : MonoBehaviour
         
     public Trap StartPreviewTrap(TrapModel model)
     {
-        return SpawnTrap(model, Vector3Int.zero);
+        var trap = SpawnTrap(model, Vector3Int.zero);
+        trap.Highlight(true, true);
+        return trap;
     }
 
 }

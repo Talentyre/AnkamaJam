@@ -315,7 +315,9 @@ public class GameSingleton : MonoBehaviour
     {
         if (!CanSpawnTrapAt(model, position))
             return;
-        // Check souls
+        if (Souls < model.Souls)
+            return;
+
         var trap = TrapManager.SpawnTrap(model, position);
         trap.OnPurchase();
         if (trap != null)
@@ -325,5 +327,12 @@ public class GameSingleton : MonoBehaviour
     public void BeginDrag(bool drag)
     {
         TrapTilemap.color = drag ? Color.white : new Color(1f, 1f, 1f, 0f);
+        foreach (var trap in m_traps)
+        {
+            if (drag)
+                trap.Highlight(false, true);
+            else
+                trap.Highlight(false, false);
+        }
     }
 }

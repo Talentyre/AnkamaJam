@@ -5,7 +5,7 @@ using System.Collections.Generic;
 public abstract class TrapModel : MonoBehaviour
 {
     [SerializeField]
-    private Sprite m_trapUISprite;
+    private Highlight m_highlight;
 	[SerializeField]
 	private int m_cooldown;
     [SerializeField]
@@ -31,6 +31,13 @@ public abstract class TrapModel : MonoBehaviour
     public int Cooldown { get { return m_cooldown; } }
     public int Souls { get { return m_souls; } }
     public bool Automatic { get { return m_automatic; } }
+    public Highlight Highlight { get { return m_highlight; } }
+
+    private void Awake()
+    {
+        m_highlight.Unhighlight();
+        m_highlight.Init(m_aoe, m_blockAOE);
+    }
 
     public List<Vector2Int> ActivationPositions(Vector2Int pos)
     {
@@ -51,7 +58,7 @@ public abstract class TrapModel : MonoBehaviour
     {
         get
         {
-            return UnityEngine.Random.Range(m_delayMin, m_delayMax);
+            return Random.Range(m_delayMin, m_delayMax);
         }
     }
 }
