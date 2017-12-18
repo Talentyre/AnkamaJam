@@ -19,6 +19,8 @@ public abstract class TrapModel : MonoBehaviour
     [SerializeField]
     private TrapAOE m_aoe = TrapAOE.Point;
     [SerializeField]
+    private TrapAOE m_blockAOE = TrapAOE.Point;
+    [SerializeField]
     private int m_souls;
     [SerializeField]
     private bool m_automatic = true;
@@ -32,36 +34,12 @@ public abstract class TrapModel : MonoBehaviour
 
     public List<Vector2Int> ActivationPositions(Vector2Int pos)
     {
-        var list = new List<Vector2Int>();
-        list.Add(pos);
+        return Helper.PositionsFromAOE(m_aoe, pos);
+    }
 
-        switch (m_aoe)
-        {
-            case TrapAOE.Point:
-                break;
-            case TrapAOE.LittleLineHorizontal:
-                list.Add(pos + Vector2Int.right);
-                break;
-            case TrapAOE.LineHorizontal:
-                list.Add(pos + Vector2Int.left);
-                list.Add(pos + Vector2Int.right);
-                break;
-            case TrapAOE.LineVertical:
-                list.Add(pos + Vector2Int.up);
-                list.Add(pos + Vector2Int.down);
-                break;
-            case TrapAOE.Down:
-                list.Add(pos + Vector2Int.down);
-                break;
-            case TrapAOE.Cross:
-                list.Add(pos + Vector2Int.left);
-                list.Add(pos + Vector2Int.right);
-                list.Add(pos + Vector2Int.up);
-                list.Add(pos + Vector2Int.down);
-                break;
-        }
-
-        return list;
+    public List<Vector2Int> BlockPositions(Vector2Int pos)
+    {
+        return Helper.PositionsFromAOE(m_blockAOE, pos);
     }
 
     public abstract void Activate(CharacterBehaviour c);

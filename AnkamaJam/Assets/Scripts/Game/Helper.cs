@@ -41,4 +41,38 @@ public class Helper
         var screenToWorldPoint = Camera.main.ScreenToWorldPoint(data.position);
         return GameSingleton.Instance.GridLayout.WorldToCell(screenToWorldPoint);
     }
+
+    public static List<Vector2Int> PositionsFromAOE(TrapAOE aoe, Vector2Int pos)
+    {
+        var list = new List<Vector2Int>();
+        list.Add(pos);
+
+        switch (aoe)
+        {
+            case TrapAOE.Point:
+                break;
+            case TrapAOE.LittleLineHorizontal:
+                list.Add(pos + Vector2Int.right);
+                break;
+            case TrapAOE.LineHorizontal:
+                list.Add(pos + Vector2Int.left);
+                list.Add(pos + Vector2Int.right);
+                break;
+            case TrapAOE.LineVertical:
+                list.Add(pos + Vector2Int.up);
+                list.Add(pos + Vector2Int.down);
+                break;
+            case TrapAOE.Down:
+                list.Add(pos + Vector2Int.down);
+                break;
+            case TrapAOE.Cross:
+                list.Add(pos + Vector2Int.left);
+                list.Add(pos + Vector2Int.right);
+                list.Add(pos + Vector2Int.up);
+                list.Add(pos + Vector2Int.down);
+                break;
+        }
+
+        return list;
+    }
 }

@@ -11,10 +11,12 @@ public class Trap : MonoBehaviour
 	private float m_nextActivation;
 
     private Vector2Int m_position;
-	private List<Vector2Int> m_activationPositions;
+    private List<Vector2Int> m_activationPositions;
+    private List<Vector2Int> m_blockPositions;
 
     public Vector2Int Position { get { return m_position; } }
     public List<Vector2Int> ActivationPositions { get { return m_activationPositions; } }
+    public List<Vector2Int> BlockPositions { get { return m_blockPositions; } }
 
     public float CooldownPercentage
     {
@@ -39,9 +41,11 @@ public class Trap : MonoBehaviour
         m_model = model;
         m_nextActivation = Time.realtimeSinceStartup + m_model.Delay;
         m_activationPositions = new List<Vector2Int>();
+        m_blockPositions = new List<Vector2Int>();
 
         m_position = new Vector2Int(position.x, position.y);
         m_activationPositions.AddRange(m_model.ActivationPositions(m_position));
+        m_blockPositions.AddRange(m_model.BlockPositions(m_position));
     }
 
     public TrapModel Model { get { return m_model; } }

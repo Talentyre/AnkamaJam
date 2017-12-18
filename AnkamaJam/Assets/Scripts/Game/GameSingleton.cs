@@ -300,14 +300,14 @@ public class GameSingleton : MonoBehaviour
 
     public bool CanSpawnTrapAt(TrapModel model, Vector3Int position)
     {
-        var positions = Helper.ToVector3Int(model.ActivationPositions(new Vector2Int(position.x, position.y)));
+        var positions = Helper.ToVector3Int(model.BlockPositions(new Vector2Int(position.x, position.y)));
         var trapPositions = GridInformation.GetAllPositions(TilemapProperty.TrapProperty);
 
         if (!positions.All((pos) => trapPositions.Contains(pos)))
             return false;
 
         List<Vector3Int> allTrapsPositions = new List<Vector3Int>();
-        m_traps.ForEach((t) => allTrapsPositions.AddRange(Helper.ToVector3Int(t.ActivationPositions)));
+        m_traps.ForEach((t) => allTrapsPositions.AddRange(Helper.ToVector3Int(t.BlockPositions)));
         return !positions.Any((pos) => allTrapsPositions.Contains(pos));
     }
 
