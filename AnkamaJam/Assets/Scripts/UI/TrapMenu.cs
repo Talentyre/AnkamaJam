@@ -32,9 +32,9 @@ public class TrapMenu : MonoBehaviour
 	public void UpdateInfos(Trap trap)
 	{
 		_trap = trap;
-		SellButton.GetComponentInChildren<Text>().text = "Del +" + trap.SellCost;
+		SellButton.GetComponentInChildren<Text>().text = "+ " + trap.SellCost;
 		var upCost = trap.Model.m_evolution.Souls;
-		UpgradeButton.GetComponentInChildren<Text>().text = "Up -" + upCost;
+		UpgradeButton.GetComponentInChildren<Text>().text = "- " + upCost;
 		UpgradeButton.interactable = !trap.Evolved && upCost <= GameSingleton.Instance.Souls;
 		
 		

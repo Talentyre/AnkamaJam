@@ -156,7 +156,7 @@ public class Trap : MonoBehaviour
         if (_trapMenu == null)
         {
             _trapMenu = Instantiate(_trapMenuPrefab);
-            _trapMenu.transform.position = transform.position + Vector3.up;
+            _trapMenu.transform.position = transform.position + Vector3.up + Vector3.right*0.5f;
         }
         else
         {
