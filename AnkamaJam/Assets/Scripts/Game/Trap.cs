@@ -1,29 +1,53 @@
 ﻿using UnityEngine;
-
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
+using UnityEngine.UI;
 
 public class Trap : MonoBehaviour
 {
-	private int m_level;
-	private TrapModel m_model;
+    private int m_level;
+    private TrapModel m_model;
 
-	private float m_nextActivation;
+    private float m_nextActivation;
 
     private Vector2Int m_position;
     private List<Vector2Int> m_activationPositions;
     private List<Vector2Int> m_blockPositions;
     private bool m_evolved;
     public float m_cooldown;
+    public Image EvolvedImage;
 
-    public Vector2Int Position { get { return m_position; } }
-    public List<Vector2Int> ActivationPositions { get { return m_activationPositions; } }
-    public List<Vector2Int> BlockPositions { get { return m_blockPositions; } }
+    private GameObject _trapMenuPrefab;
+    private GameObject _trapMenu;
+
+    public Vector2Int Position
+    {
+        get { return m_position; }
+    }
+
+    public List<Vector2Int> ActivationPositions
+    {
+        get { return m_activationPositions; }
+    }
+
+    public List<Vector2Int> BlockPositions
+    {
+        get { return m_blockPositions; }
+    }
+
     public bool Evolved
     {
         get { return m_evolved; }
-        set { m_evolved = value; }
+        set
+        {
+            if (value && !m_evolved)
+                m_model.OnEvolved();
+            m_evolved = value;
+        }
     }
+
+    
 
     public float Cooldown
     {
@@ -43,6 +67,11 @@ public class Trap : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        _trapMenuPrefab = Resources.Load<GameObject>("Prefabs/UI/TrapMenu");
+    }
+
     public void UpdateCooldownProgressBar()
     {
         m_model.CooldownImage.fillAmount = CooldownPercentage;
@@ -60,7 +89,10 @@ public class Trap : MonoBehaviour
         m_blockPositions.AddRange(m_model.BlockPositions(m_position));
     }
 
-    public TrapModel Model { get { return m_model; } }
+    public TrapModel Model
+    {
+        get { return m_model; }
+    }
 
     public void Act(bool automatic = true)
     {
@@ -74,8 +106,8 @@ public class Trap : MonoBehaviour
         if (IsInCooldown)
             return;
 
-        var charactersInTrap = GameSingleton.Instance.GetCharactersAt(m_activationPositions).ToList() ;
-        if (automatic && charactersInTrap.Count == 0) 
+        var charactersInTrap = GameSingleton.Instance.GetCharactersAt(m_activationPositions).ToList();
+        if (automatic && charactersInTrap.Count == 0)
             return;
 
         foreach (var characterBehaviour in charactersInTrap)
@@ -85,16 +117,21 @@ public class Trap : MonoBehaviour
 
         m_model.Animators.ForEach(a => a.SetTrigger("TriggerTrap"));
         m_nextActivation = Time.realtimeSinceStartup + m_model.Cooldown;
-	}
- 
+    }
+
     public bool IsInCooldown
     {
         get { return m_model.Cooldown > 0 && m_nextActivation > Time.realtimeSinceStartup; }
     }
 
+    public int SellCost
+    {
+        get { return (m_model.Souls + (Evolved ? m_model.m_evolution.Souls : 0))/2; }
+    }
+
     public void OnPurchase()
     {
-        GameSingleton.Instance.OnSoulModified(-Model.Souls,transform.position);
+        GameSingleton.Instance.OnSoulModified(-Model.Souls, transform.position);
     }
 
     public void Unhighlight()
@@ -108,5 +145,23 @@ public class Trap : MonoBehaviour
     }
 
 
+    public void DisactiveMenu()
+    {
+        if (_trapMenu != null)
+            _trapMenu.gameObject.SetActive(false);
+    }
 
+    public void ActivateMenu()
+    {
+        if (_trapMenu == null)
+        {
+            _trapMenu = Instantiate(_trapMenuPrefab);
+            _trapMenu.transform.position = transform.position + Vector3.up;
+        }
+        else
+        {
+            _trapMenu.gameObject.SetActive(true);
+        }
+        _trapMenu.GetComponent<TrapMenu>().UpdateInfos(this);
+    }
 }

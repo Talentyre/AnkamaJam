@@ -80,9 +80,8 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
-        InputManager.OnCellRightClick += GameSceneUi.ActionDone;
         BeginDrag(false);
-        Souls = 5;
+        ComputeSoul(5);
         _soulGainDuration = SoulGainBaseDuration;
 
         CharacterBehaviour.BubbleCount = 0;
@@ -105,6 +104,7 @@ public class GameSingleton : MonoBehaviour
 
     private const float SoulGainBaseDuration = 10;
     private float _soulGainDuration;
+    private Trap _trapActivated;
 
     private int Combo
     {
@@ -118,26 +118,17 @@ public class GameSingleton : MonoBehaviour
 
     public void OnCellClick(Vector3Int position)
     {
-        switch (GameSceneUi.UiMouseSelectionMode)
+        var trap = m_traps.FirstOrDefault((c) => c.Position.Equals(Helper.ToVector2Int(position)));
+        if (trap != null)
         {
-            case UiMouseSelectionMode.None:
-            {
-                var trap = m_traps.FirstOrDefault((c) => c.Position.Equals(Helper.ToVector2Int(position)));
-                if (trap != null)
-                    trap.Act(false);
-                break;
-            }
-            case UiMouseSelectionMode.RemoveTrap:
-            {
-                RemoveTrapAt(new Vector2Int(position.x, position.y));
-                break;
-            }
-            case UiMouseSelectionMode.UpgradeTrap:
-            {
-                UpgradeTrapAt(new Vector2Int(position.x, position.y));
-                break;
-            }
+            trap.ActivateMenu();
+            _trapActivated = trap;
         }
+        else if (_trapActivated != null)
+        {
+            _trapActivated.DisactiveMenu();
+        }
+        
     }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
@@ -173,14 +164,20 @@ public class GameSingleton : MonoBehaviour
             _soulGainDuration -= Time.deltaTime;
             if (_soulGainDuration <= 0)
             {
-                Souls++;
-                if (OnSoulGain != null)
-                    OnSoulGain();
-                if (OnSoulUpdate != null)
-                    OnSoulUpdate(Souls);
+                ComputeSoul(1);
+                
                 _soulGainDuration = SoulGainBaseDuration;
             }
         }
+    }
+
+    public void ComputeSoul(int delta)
+    {
+        Souls += delta;
+        if (OnSoulGain != null && delta > 0)
+            OnSoulGain();
+        if (OnSoulUpdate != null)
+            OnSoulUpdate(Souls);
     }
 
     public void GameLoop()
@@ -270,11 +267,7 @@ public class GameSingleton : MonoBehaviour
 
     public void OnSoulModified(int soulDelta, Vector3 sourcePosition)
     {
-        Souls += soulDelta;
-        if (OnSoulUpdate != null)
-            OnSoulUpdate(Souls);
-        if (soulDelta > 0 && OnSoulGain != null)
-            OnSoulGain();
+        ComputeSoul(soulDelta);
 
         var text = (soulDelta >= 0 ? "+ " : "") + soulDelta;
         LaunchOverheadFeedback(text, Color.cyan, sourcePosition);
@@ -343,6 +336,12 @@ public class GameSingleton : MonoBehaviour
             m_traps.Add(trap);
     }
 
+    public void RemoveTrap(Trap trap)
+    {
+        m_traps.Remove(trap);
+        Destroy(trap.gameObject);
+    }
+    
     public void RemoveTrapAt(Vector2Int position)
     {
         Trap trapToRemove = null;
@@ -355,19 +354,7 @@ public class GameSingleton : MonoBehaviour
         {
             m_traps.Remove(trapToRemove);
             Destroy(trapToRemove.gameObject);
-            GameSceneUi.ActionDone();
         }
-    }
-    public void UpgradeTrapAt(Vector2Int position)
-    {
-        m_traps.ForEach(t =>
-        {
-            if (!t.Evolved && t.Position == position)
-            {
-                t.Evolved = true;
-                GameSceneUi.ActionDone();
-            }
-        });
     }
 
     public void BeginDrag(bool drag)

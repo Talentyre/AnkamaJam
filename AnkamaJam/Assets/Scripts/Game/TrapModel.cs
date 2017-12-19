@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using DG.Tweening;
 
 public abstract class TrapModel : MonoBehaviour
 {
+    [SerializeField]
+    private Image m_evolvedImage;
     [SerializeField]
     private Highlight m_highlight;
 	[SerializeField]
@@ -35,6 +38,17 @@ public abstract class TrapModel : MonoBehaviour
     {
         m_highlight.Unhighlight();
         m_highlight.Init(m_aoe, m_blockAOE);
+        m_evolvedImage.color = new Color(1f, 1f, 1f, 0f);
+    }
+    
+    public void OnEvolved()
+    {
+        var sequence = DOTween.Sequence();
+        sequence.Append(m_evolvedImage.DOFade(1f, 0.25f));
+        sequence.Append(m_evolvedImage.DOFade(0f, 0.25f));
+        sequence.SetLoops(3);
+        sequence.OnComplete(() => m_evolvedImage.DOFade(1f, 0.25f));
+        sequence.Play();
     }
 
     public List<Vector2Int> ActivationPositions(Vector2Int pos)
