@@ -14,6 +14,7 @@ public class CharacterSpawner : MonoBehaviour
 	private const float MaxDuration = 60 * 2;
 	private float _currentDuration;
 
+    /*
 	public void Init()
 	{
 		_currentDuration = MaxDuration;
@@ -50,8 +51,9 @@ public class CharacterSpawner : MonoBehaviour
 		}
 		return characterBehaviours;
 	}
+    */
 
-	private CharacterBehaviour SpawnCharacter(CharacterModel characterModel, Vector3Int position)
+	public CharacterBehaviour SpawnCharacter(CharacterModel characterModel, Vector3Int position)
 	{
 		var character = Instantiate(characterModel.gameObject,PnjsTransform);
 		var characterBehaviour = character.AddComponent<CharacterBehaviour>();

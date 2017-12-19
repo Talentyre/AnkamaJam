@@ -22,10 +22,10 @@ public class GameSingleton : MonoBehaviour
     public GridLayout GridLayout;
     public TrapManager TrapManager;
     public InputManager InputManager;
-    public GameSceneUI GameSceneUi;
+    public WaveManager WaveManager;
 
     public float LogicFps = 30;
-
+    public float StartAfterTime = 2.0f;
     public GameObject OverhadFeedbackPrefab;
 
     public Tilemap TrapTilemap;
@@ -75,9 +75,8 @@ public class GameSingleton : MonoBehaviour
     private void Awake()
     {
         m_instance = this;
-        _lastTick = Time.realtimeSinceStartup;
+        _lastTick = Time.realtimeSinceStartup + StartAfterTime;
         _tickInterval = 1 / LogicFps;
-        CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
         BeginDrag(false);
@@ -179,6 +178,12 @@ public class GameSingleton : MonoBehaviour
             OnSoulUpdate(Souls);
     }
 
+    private readonly List<CharacterSpawn> m_spawns = new List<CharacterSpawn>();
+    public void RequestCharacterSpawn(CharacterSpawn spawn)
+    {
+        m_spawns.Add(spawn);
+    }
+
     public void GameLoop()
     {
         if (_gameOverLaunched)
@@ -189,9 +194,23 @@ public class GameSingleton : MonoBehaviour
             return;
         }
 
-        var spawnedCharacters = CharacterSpawner.SpawnCharacterLoop();
-        m_characters.AddRange(spawnedCharacters);
+        if (m_characters.Count == 0 && !WaveManager.IsRunningWaves)
+        {
+            if (WaveManager.HasRemainingWaves)
+                WaveManager.StartNextWave();
+            else
+            {
+                // Victoire ?
+            }
+        }
 
+        m_spawns.ForEach(spawn =>
+        {
+            var spawnedChar = CharacterSpawner.SpawnCharacter(spawn.Model, spawn.Position);
+            m_characters.Add(spawnedChar);
+        });
+        m_spawns.Clear();
+        
         for (int i = 0, size = m_traps.Count; i < size; ++i)
         {
             var trap = m_traps[i];
