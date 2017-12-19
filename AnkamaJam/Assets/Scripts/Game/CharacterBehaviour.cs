@@ -107,6 +107,8 @@ public class CharacterBehaviour : MonoBehaviour
         OnWalk();
         RefreshNextStaticTime();
         RefreshNextTalkTime();
+
+        m_model.LifeImage.fillAmount = 1.0f;
     }
 
     private Coroutine m_currentCoroutine = null;
@@ -411,6 +413,7 @@ public class CharacterBehaviour : MonoBehaviour
     public void Damage(int mDamage)
     {
         m_currentLife -= mDamage;
+        m_model.LifeImage.fillAmount = m_currentLife / (float) m_model.MaxLife;
         OnHit();
     }
 

@@ -43,7 +43,9 @@ public class CharacterSpawner : MonoBehaviour
 			{
 				var position = _spawnPositions[Helper.random(_spawnPositions.Length)];
 				characterBehaviours.Add(SpawnCharacter(model, position));
-				m_charactersNextSpawn[model] = Time.time + Mathf.Max(MinSpawnInterval,model.SpawnInterval*(_currentDuration/MaxDuration));
+                var ratio = Mathf.Max(0, _currentDuration) / MaxDuration;
+                var value = Mathf.Lerp(model.SpawnInterval, model.MaxSpawnInterval, ratio);
+				m_charactersNextSpawn[model] = Time.time + value;
 			}
 		}
 		return characterBehaviours;
@@ -53,7 +55,8 @@ public class CharacterSpawner : MonoBehaviour
 	{
 		var character = Instantiate(characterModel.gameObject,PnjsTransform);
 		var characterBehaviour = character.AddComponent<CharacterBehaviour>();
-		characterBehaviour.Init(characterModel, position);
+        var model = character.GetComponent<CharacterModel>();
+        characterBehaviour.Init(model, position);
 		character.transform.position = position;
 		return characterBehaviour;
 	}

@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -14,12 +15,14 @@ public class CharacterModel : MonoBehaviour
     private float m_speed = 1f;
 
     public float Speed { get { return m_speed; } }
-    
+
     [SerializeField]
     private float m_spawnInterval = 1f;
-
     public float SpawnInterval { get { return m_spawnInterval; } }
-    
+    [SerializeField]
+    private float m_maxSpawnInterval = 1f;
+    public float MaxSpawnInterval { get { return m_maxSpawnInterval; } }
+
     [SerializeField]
     private float m_spawnDelay = 1f;
 
@@ -56,10 +59,14 @@ public class CharacterModel : MonoBehaviour
     private int m_score = 100;
 
     public int Score { get { return m_score; } }
-    
-    
-    
-    
+
+    [SerializeField]
+    private Image m_lifeImage;
+    public Image LifeImage
+    {
+        get { return m_lifeImage; }
+    }
+
     private string[] m_randomSentences =
     {
         "Mais qu'est-ce que je fais ici ?",
@@ -76,15 +83,5 @@ public class CharacterModel : MonoBehaviour
     public string[] RandomSentences {get { return m_randomSentences; }}
     
     
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    
 }
