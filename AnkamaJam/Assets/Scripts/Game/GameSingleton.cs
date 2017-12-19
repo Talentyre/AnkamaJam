@@ -118,17 +118,16 @@ public class GameSingleton : MonoBehaviour
 
     public void OnCellClick(Vector3Int position)
     {
+        if (_trapActivated != null)
+        {
+            _trapActivated.DisactiveMenu();
+        }
         var trap = m_traps.FirstOrDefault((c) => c.Position.Equals(Helper.ToVector2Int(position)));
         if (trap != null)
         {
             trap.ActivateMenu();
             _trapActivated = trap;
         }
-        else if (_trapActivated != null)
-        {
-            _trapActivated.DisactiveMenu();
-        }
-        
     }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
