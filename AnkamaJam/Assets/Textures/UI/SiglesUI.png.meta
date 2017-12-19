@@ -1,0 +1,562 @@
+fileFormatVersion: 2
+guid: 4bf9e2beb1dbda44ebd70380b668a360
+timeCreated: 1513641591
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: SiglesUI_0
+    21300002: SiglesUI_1
+    21300004: SiglesUI_2
+    21300006: SiglesUI_3
+    21300008: SiglesUI_4
+    21300010: SiglesUI_5
+    21300012: SiglesUI_6
+    21300014: SiglesUI_7
+    21300016: SiglesUI_8
+    21300018: SiglesUI_9
+    21300020: SiglesUI_10
+    21300022: SiglesUI_11
+    21300024: SiglesUI_12
+    21300026: SiglesUI_13
+    21300028: SiglesUI_14
+    21300030: SiglesUI_15
+    21300032: SiglesUI_16
+    21300034: SiglesUI_17
+    21300036: SiglesUI_18
+    21300038: SiglesUI_19
+    21300040: SiglesUI_20
+    21300042: SiglesUI_21
+    21300044: SiglesUI_22
+    21300046: SiglesUI_23
+    21300048: SiglesUI_24
+    21300050: SiglesUI_25
+    21300052: SiglesUI_26
+    21300054: SiglesUI_27
+    21300056: SiglesUI_28
+    21300058: SiglesUI_29
+  externalObjects: {}
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: iPhone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: SiglesUI_0
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 41.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_1
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 41.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_2
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 41.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_3
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 41.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_4
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 41.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_5
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 41.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_6
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 31.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_7
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 31.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_8
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 31.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_9
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 31.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_10
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 31.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_11
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 31.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_12
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 21.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_13
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 21.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_14
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 21.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_15
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 21.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_16
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 21.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_17
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 21.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_18
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 11.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_19
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 11.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_20
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 11.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_21
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 11.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_22
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 11.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_23
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 11.6
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_24
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 1.6000004
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_25
+      rect:
+        serializedVersion: 2
+        x: 10
+        y: 1.6000004
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_26
+      rect:
+        serializedVersion: 2
+        x: 20
+        y: 1.6000004
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_27
+      rect:
+        serializedVersion: 2
+        x: 30
+        y: 1.6000004
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_28
+      rect:
+        serializedVersion: 2
+        x: 40
+        y: 1.6000004
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: SiglesUI_29
+      rect:
+        serializedVersion: 2
+        x: 50
+        y: 1.6000004
+        width: 10.666667
+        height: 10.4
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+    outline: []
+    physicsShape: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

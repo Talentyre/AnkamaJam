@@ -13,10 +13,22 @@ public class Trap : MonoBehaviour
     private Vector2Int m_position;
     private List<Vector2Int> m_activationPositions;
     private List<Vector2Int> m_blockPositions;
+    private bool m_evolved;
+    public float m_cooldown;
 
     public Vector2Int Position { get { return m_position; } }
     public List<Vector2Int> ActivationPositions { get { return m_activationPositions; } }
     public List<Vector2Int> BlockPositions { get { return m_blockPositions; } }
+    public bool Evolved
+    {
+        get { return m_evolved; }
+        set { m_evolved = value; }
+    }
+
+    public float Cooldown
+    {
+        get { return Evolved ? m_model.m_evolution.Cooldown : m_cooldown; }
+    }
 
     public float CooldownPercentage
     {
@@ -68,7 +80,7 @@ public class Trap : MonoBehaviour
 
         foreach (var characterBehaviour in charactersInTrap)
         {
-            m_model.Activate(characterBehaviour);
+            m_model.Activate(characterBehaviour, Evolved);
         }
 
         m_model.Animators.ForEach(a => a.SetTrigger("TriggerTrap"));

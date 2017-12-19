@@ -10,6 +10,7 @@ public class GameSceneUI : MonoBehaviour
 	public Text ScoreText;
 	public Text ComboText;
 	public Text SoulText;
+	public Text RightClickToCancelText;
 	public Image SoulGauge;
 	public Image AlertGauge1;
 	public Image AlertGauge2;
@@ -18,13 +19,24 @@ public class GameSceneUI : MonoBehaviour
 	public Image AlertGauge5;
 	public Transform SoulGainParent;
 	public GameObject SoulGainFxPrefab;
+	public Texture2D RemoveCursorTexture;
+	public Texture2D UpgradeCursorTexture;
+	
 	private Sequence _alertTweener;
 	private Vector2 _soulGaugeBaseSizeDelta;
 	private Image _lastAlertGaugeActivated;
 
+	public UiMouseSelectionMode UiMouseSelectionMode;
+
 	// Use this for initialization
 	void Start ()
 	{
+		var sequ = DOTween.Sequence();
+		sequ.Append(RightClickToCancelText.DOFade(1f, 1f));
+		sequ.Append(RightClickToCancelText.DOFade(0f, 1f));
+		sequ.SetLoops(-1);
+		RightClickToCancelText.gameObject.SetActive(false);
+		
 		_soulGaugeBaseSizeDelta = SoulGauge.rectTransform.sizeDelta;
 		SoulGauge.rectTransform.sizeDelta = new Vector2(_soulGaugeBaseSizeDelta.x, 0);
 		
@@ -141,6 +153,58 @@ public class GameSceneUI : MonoBehaviour
 			return AlertGauge5;
 		}
 		return null;
+	}
+
+	public void ActionRequired()
+	{
+		RightClickToCancelText.gameObject.SetActive(true);
+	}
+	
+	public void ActionDone()
+	{
+		RightClickToCancelText.gameObject.SetActive(false);
+		ChangeCursor();
+	}
+
+	public void OnRemoveTrapClick()
+	{
+		UiMouseSelectionMode = UiMouseSelectionMode.RemoveTrap;
+		ActionRequired();
+		ChangeCursor();
+	}
+
+	public void OnUpgradeTrapClick()
+	{
+		UiMouseSelectionMode = UiMouseSelectionMode.UpgradeTrap;
+		ActionRequired();
+		ChangeCursor();
+	}
+
+	public void ChangeCursor()
+	{
+		switch (UiMouseSelectionMode)
+		{
+			default:
+			{
+				SetCursor(null);
+				break;
+			}
+			case UiMouseSelectionMode.RemoveTrap:
+			{
+				SetCursor(RemoveCursorTexture);
+				break;
+			}
+			case UiMouseSelectionMode.UpgradeTrap:
+			{
+				SetCursor(UpgradeCursorTexture);
+				break;
+			}
+		}
+	}
+
+	public void SetCursor(Texture2D texture2D)
+	{
+		Cursor.SetCursor(texture2D, Vector2.zero, CursorMode.Auto);
 	}
 
 	public void QuitGame()

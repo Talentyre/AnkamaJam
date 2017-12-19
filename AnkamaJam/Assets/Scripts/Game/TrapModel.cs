@@ -7,13 +7,13 @@ public abstract class TrapModel : MonoBehaviour
     [SerializeField]
     private Highlight m_highlight;
 	[SerializeField]
-	private int m_cooldown;
+	public int Cooldown;
     [SerializeField]
     private float m_delayMin;
     [SerializeField]
     private float m_delayMax;
     [SerializeField]
-    private TrapModel m_evolution;
+    public TrapModel m_evolution;
     [SerializeField]
     private List<Animator> m_animator;
     [SerializeField]
@@ -27,8 +27,6 @@ public abstract class TrapModel : MonoBehaviour
     [SerializeField]
     private Image m_cooldownImage;
 
-
-    public int Cooldown { get { return m_cooldown; } }
     public int Souls { get { return m_souls; } }
     public bool Automatic { get { return m_automatic; } }
     public Highlight Highlight { get { return m_highlight; } }
@@ -49,7 +47,7 @@ public abstract class TrapModel : MonoBehaviour
         return Helper.PositionsFromAOE(m_blockAOE, pos);
     }
 
-    public abstract void Activate(CharacterBehaviour c);
+    public abstract void Activate(CharacterBehaviour c, bool evolved);
 
     public List<Animator> Animators { get { return m_animator; } }
     public Image CooldownImage { get { return m_cooldownImage; } }

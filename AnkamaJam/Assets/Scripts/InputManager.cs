@@ -6,6 +6,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour {
 
     public event Action<Vector3Int> OnCellClick;
+    public event Action OnCellRightClick;
 
 	// Use this for initialization
 	void Start () {
@@ -20,7 +21,12 @@ public class InputManager : MonoBehaviour {
 			//var vector3Int = new Vector3Int(Mathf.RoundToInt(screenToWorldPoint.x), Mathf.RoundToInt(screenToWorldPoint.y),0);
 
 			var worldToCell = GameSingleton.Instance.GridLayout.WorldToCell(screenToWorldPoint);
-            OnCellClick(worldToCell);
+			if (OnCellClick != null)
+            	OnCellClick(worldToCell);
+		} else if (Input.GetMouseButtonUp(1))
+		{
+			if (OnCellRightClick != null)
+				OnCellRightClick();
 		}
 	}
 }

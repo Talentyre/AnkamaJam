@@ -6,7 +6,7 @@ public class ElectricTrap : DamageTrap
 {
     public List<GameObject> ElectricFXs = new List<GameObject>();
 
-    public override void Activate(CharacterBehaviour character)
+    public override void Activate(CharacterBehaviour character, bool evolved)
     {
         for (int i = 0; i < Random.Range(6, 10); i++)
         {
@@ -23,7 +23,7 @@ public class ElectricTrap : DamageTrap
             go.transform.position = character.transform.position +  new Vector3(r.x,r.y,0)*0.7f;   
         }
 
-        character.OnElectrocute(1f, Damage);
+        character.OnElectrocute(1f, evolved  ? ((ElectricTrap)m_evolution).Damage : Damage);
 
     }
 }

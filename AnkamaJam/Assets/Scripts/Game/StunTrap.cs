@@ -2,11 +2,10 @@
 
 public class StunTrap : TrapModel
 {
-    [SerializeField]
-    private float m_duration;
+    [SerializeField] public float m_duration;
 
-    public override void Activate(CharacterBehaviour character)
+    public override void Activate(CharacterBehaviour character, bool evolved)
     {
-        character.OnStun(m_duration);
+        character.OnStun(evolved ? ((StunTrap)m_evolution).m_duration : m_duration);
     }
 }

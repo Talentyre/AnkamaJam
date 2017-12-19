@@ -22,6 +22,7 @@ public class GameSingleton : MonoBehaviour
     public GridLayout GridLayout;
     public TrapManager TrapManager;
     public InputManager InputManager;
+    public GameSceneUI GameSceneUi;
 
     public float LogicFps = 30;
 
@@ -79,6 +80,7 @@ public class GameSingleton : MonoBehaviour
         CharacterSpawner.Init();
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
+        InputManager.OnCellRightClick += GameSceneUi.ActionDone;
         BeginDrag(false);
         Souls = 5;
         _soulGainDuration = SoulGainBaseDuration;
@@ -116,9 +118,26 @@ public class GameSingleton : MonoBehaviour
 
     public void OnCellClick(Vector3Int position)
     {
-        var trap = m_traps.FirstOrDefault((c) => c.Position.Equals(Helper.ToVector2Int(position)));
-        if (trap != null)
-            trap.Act(false);
+        switch (GameSceneUi.UiMouseSelectionMode)
+        {
+            case UiMouseSelectionMode.None:
+            {
+                var trap = m_traps.FirstOrDefault((c) => c.Position.Equals(Helper.ToVector2Int(position)));
+                if (trap != null)
+                    trap.Act(false);
+                break;
+            }
+            case UiMouseSelectionMode.RemoveTrap:
+            {
+                RemoveTrapAt(new Vector2Int(position.x, position.y));
+                break;
+            }
+            case UiMouseSelectionMode.UpgradeTrap:
+            {
+                UpgradeTrapAt(new Vector2Int(position.x, position.y));
+                break;
+            }
+        }
     }
 
     public IEnumerable<CharacterBehaviour> GetCharactersAt(Vector2Int position)
@@ -322,6 +341,33 @@ public class GameSingleton : MonoBehaviour
         trap.OnPurchase();
         if (trap != null)
             m_traps.Add(trap);
+    }
+
+    public void RemoveTrapAt(Vector2Int position)
+    {
+        Trap trapToRemove = null;
+        m_traps.ForEach(t =>
+        {
+            if (t.Position == position)
+                trapToRemove = t;
+        });
+        if (trapToRemove != null)
+        {
+            m_traps.Remove(trapToRemove);
+            Destroy(trapToRemove.gameObject);
+            GameSceneUi.ActionDone();
+        }
+    }
+    public void UpgradeTrapAt(Vector2Int position)
+    {
+        m_traps.ForEach(t =>
+        {
+            if (!t.Evolved && t.Position == position)
+            {
+                t.Evolved = true;
+                GameSceneUi.ActionDone();
+            }
+        });
     }
 
     public void BeginDrag(bool drag)
