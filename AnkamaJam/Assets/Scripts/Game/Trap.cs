@@ -143,6 +143,8 @@ public class Trap : MonoBehaviour
 
     public void ActivateMenu()
     {
+        if (_trapMenuPrefab)
+            return;
         if (_trapMenu == null)
         {
             _trapMenu = Instantiate(_trapMenuPrefab);

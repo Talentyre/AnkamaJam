@@ -180,6 +180,8 @@ public class GameSingleton : MonoBehaviour
     }
 
     private readonly List<CharacterSpawn> m_spawns = new List<CharacterSpawn>();
+    public bool GameStarted;
+
     public void RequestCharacterSpawn(CharacterSpawn spawn)
     {
         m_spawns.Add(spawn);
@@ -187,6 +189,8 @@ public class GameSingleton : MonoBehaviour
 
     public void GameLoop()
     {
+        if (!GameStarted)
+            return;
         if (_gameOverLaunched)
             return;
         if (IsGameOver)

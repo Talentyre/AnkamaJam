@@ -14,6 +14,7 @@ public class GameSceneUI : MonoBehaviour
     public Image AlertGaugeImage;
     public Transform SoulGainParent;
     public GameObject SoulGainFxPrefab;
+    public CanvasGroup IntroCanvasGroup;
 
     private Sequence _alertTweener;
     private Vector2 _soulGaugeBaseSizeDelta;
@@ -72,5 +73,17 @@ public class GameSceneUI : MonoBehaviour
     {
         var showPanels = SceneHandler.Instance.gameObject.GetComponent<ShowPanels>();
         SceneHandler.Instance.Load(SceneHandler.StartScene, () => showPanels.ShowMenu());
+    }
+
+    public void OnIntroClick()
+    {
+        StartCoroutine(IntroAnim());
+    }
+
+    private IEnumerator IntroAnim()
+    {
+        IntroCanvasGroup.DOFade(0f, 2f);
+        yield return new WaitForSeconds(3f);
+        GameSingleton.Instance.GameStarted = true;
     }
 }
