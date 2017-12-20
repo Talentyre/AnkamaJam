@@ -80,7 +80,7 @@ public class GameSingleton : MonoBehaviour
         m_traps.AddRange(TrapManager.Init());
         InputManager.OnCellClick += OnCellClick;
         BeginDrag(false);
-        ComputeSoul(5);
+        ComputeSoul(8);
         _soulGainDuration = SoulGainBaseDuration;
 
         CharacterBehaviour.BubbleCount = 0;
