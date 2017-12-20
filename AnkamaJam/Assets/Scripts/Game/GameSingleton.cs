@@ -252,6 +252,7 @@ public class GameSingleton : MonoBehaviour
     private void OnGameOver(bool victory)
     {
         GameOverScript.Victory = victory;
+        GameOverScript.Score = (int) Score;
         _gameOverLaunched = true;
 
         // todo score et compagnie !
