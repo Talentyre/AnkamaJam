@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,6 +15,7 @@ public class GameSceneUI : MonoBehaviour
     public Image AlertGaugeImage;
     public Transform SoulGainParent;
     public GameObject SoulGainFxPrefab;
+    public CanvasGroup GameCanvasGroup;
     public CanvasGroup IntroCanvasGroup;
 
     private Sequence _alertTweener;
@@ -22,6 +24,10 @@ public class GameSceneUI : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        IntroCanvasGroup.alpha = 0f;
+        GameCanvasGroup.alpha = 0f;
+        IntroCanvasGroup.DOFade(1f, 2f);
+        
         _soulGaugeBaseSizeDelta = SoulGauge.rectTransform.sizeDelta;
         SoulGauge.rectTransform.sizeDelta = new Vector2(_soulGaugeBaseSizeDelta.x, 0);
 
@@ -82,7 +88,9 @@ public class GameSceneUI : MonoBehaviour
 
     private IEnumerator IntroAnim()
     {
-        IntroCanvasGroup.DOFade(0f, 2f);
+        IntroCanvasGroup.DOFade(0f, 2f).OnComplete(() => IntroCanvasGroup.blocksRaycasts = false);
+        yield return new WaitForSeconds(1.5f);
+        GameCanvasGroup.DOFade(1f, 1f).OnComplete(() => IntroCanvasGroup.blocksRaycasts = false);
         yield return new WaitForSeconds(3f);
         GameSingleton.Instance.GameStarted = true;
     }

@@ -24,6 +24,9 @@ public class GhostButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 
 	private void Update()
 	{
+		// todo should be in GameSingleton
+		if (!GameSingleton.Instance.GameStarted)
+			return;
 		if (_ghostCooldown <= 0)
 			return;
 			

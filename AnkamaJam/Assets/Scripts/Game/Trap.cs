@@ -143,7 +143,7 @@ public class Trap : MonoBehaviour
 
     public void ActivateMenu()
     {
-        if (_trapMenuPrefab)
+        if (_trapMenuPrefab == null)
             return;
         if (_trapMenu == null)
         {

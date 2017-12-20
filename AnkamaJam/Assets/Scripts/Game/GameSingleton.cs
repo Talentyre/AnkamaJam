@@ -147,6 +147,8 @@ public class GameSingleton : MonoBehaviour
 
     private void Update()
     {
+        if (!GameStarted)
+            return;
         if (_lastTick + _tickInterval < Time.realtimeSinceStartup)
         {
             GameLoop();
@@ -189,8 +191,6 @@ public class GameSingleton : MonoBehaviour
 
     public void GameLoop()
     {
-        if (!GameStarted)
-            return;
         if (_gameOverLaunched)
             return;
         if (IsGameOver)
