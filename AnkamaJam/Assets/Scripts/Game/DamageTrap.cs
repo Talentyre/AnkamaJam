@@ -12,7 +12,7 @@ public class DamageTrap : TrapModel
 
 
 	public override void Activate(CharacterBehaviour character, bool evolved) {
-        character.Damage (evolved ? ((DamageTrap)m_evolution).Damage : m_damage);
+        character.Damage (evolved ? ((DamageTrap)Evolution).Damage : m_damage);
 	}	
 }
 

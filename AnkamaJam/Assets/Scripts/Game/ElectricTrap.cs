@@ -23,7 +23,7 @@ public class ElectricTrap : DamageTrap
             go.transform.position = character.transform.position +  new Vector3(r.x,r.y,0)*0.7f;   
         }
 
-        character.OnElectrocute(1f, evolved  ? ((ElectricTrap)m_evolution).Damage : Damage);
+        character.OnElectrocute(1f, evolved  ? ((ElectricTrap)Evolution).Damage : Damage);
 
     }
 }

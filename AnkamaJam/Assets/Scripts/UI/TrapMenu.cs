@@ -24,8 +24,8 @@ public class TrapMenu : MonoBehaviour
 
 	private void UpgradeTrap()
 	{
-		_trap.Evolved = true;
-		GameSingleton.Instance.OnSoulModified(-_trap.Model.m_evolution.Souls, transform.position);
+		_trap.Model.EvolutionIndex++;
+		GameSingleton.Instance.OnSoulModified(-_trap.Model.Evolution.Souls, transform.position);
 		gameObject.SetActive(false);
 	}
 
@@ -33,10 +33,10 @@ public class TrapMenu : MonoBehaviour
 	{
 		_trap = trap;
 		SellButton.GetComponentInChildren<Text>().text = "+ " + trap.SellCost;
-		var upCost = trap.Model.m_evolution.Souls;
+		var trapEvolutionCount = trap.Model.m_evolutions.Count-1;
+		var index = Mathf.Max(0,Mathf.Min(trapEvolutionCount,_trap.Model.EvolutionIndex+1));
+		var upCost = trap.Model.m_evolutions[index].Souls;
 		UpgradeButton.GetComponentInChildren<Text>().text = "- " + upCost;
-		UpgradeButton.interactable = !trap.Evolved && upCost <= GameSingleton.Instance.Souls;
-		
-		
+		UpgradeButton.interactable = _trap.Model.EvolutionIndex < trapEvolutionCount && upCost <= GameSingleton.Instance.Souls;
 	}
 }

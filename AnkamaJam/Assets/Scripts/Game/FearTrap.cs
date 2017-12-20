@@ -6,6 +6,6 @@ public class FearTrap : TrapModel
 
     public override void Activate(CharacterBehaviour character, bool evolved)
     {
-        character.OnFear(evolved ? ((FearTrap)m_evolution).m_power : m_power);
+        character.OnFear(evolved ? ((FearTrap)Evolution).m_power : m_power);
     }
 }

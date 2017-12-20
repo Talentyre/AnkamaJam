@@ -6,6 +6,6 @@ public class StunTrap : TrapModel
 
     public override void Activate(CharacterBehaviour character, bool evolved)
     {
-        character.OnStun(evolved ? ((StunTrap)m_evolution).m_duration : m_duration);
+        character.OnStun(evolved ? ((StunTrap)Evolution).m_duration : m_duration);
     }
 }

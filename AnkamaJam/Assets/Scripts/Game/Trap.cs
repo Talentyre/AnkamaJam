@@ -14,9 +14,7 @@ public class Trap : MonoBehaviour
     private Vector2Int m_position;
     private List<Vector2Int> m_activationPositions;
     private List<Vector2Int> m_blockPositions;
-    private bool m_evolved;
-    public float m_cooldown;
-    public Image EvolvedImage;
+    private int m_evolution = -1;
 
     private GameObject _trapMenuPrefab;
     private GameObject _trapMenu;
@@ -35,23 +33,15 @@ public class Trap : MonoBehaviour
     {
         get { return m_blockPositions; }
     }
+    
+    public float Cooldown
+    {
+        get { return Evolved ? m_model.Evolution.Cooldown : m_model.Cooldown; }
+    }
 
     public bool Evolved
     {
-        get { return m_evolved; }
-        set
-        {
-            if (value && !m_evolved)
-                m_model.OnEvolved();
-            m_evolved = value;
-        }
-    }
-
-    
-
-    public float Cooldown
-    {
-        get { return Evolved ? m_model.m_evolution.Cooldown : m_cooldown; }
+        get { return Model.EvolutionIndex >= 0; }
     }
 
     public float CooldownPercentage
@@ -126,7 +116,7 @@ public class Trap : MonoBehaviour
 
     public int SellCost
     {
-        get { return (m_model.Souls + (Evolved ? m_model.m_evolution.Souls : 0))/2; }
+        get { return (m_model.Souls + (Evolved ? m_model.Evolution.Souls : 0))/2; }
     }
 
     public void OnPurchase()
@@ -156,6 +146,7 @@ public class Trap : MonoBehaviour
         if (_trapMenu == null)
         {
             _trapMenu = Instantiate(_trapMenuPrefab);
+            _trapMenu.transform.SetParent(transform);
             _trapMenu.transform.position = transform.position + Vector3.up + Vector3.right*0.5f;
         }
         else
