@@ -88,7 +88,7 @@ public class GhostButton : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndD
 		yield return new WaitForSeconds(0.5f);
 		foreach (var characterBehaviour in characters)
 		{
-			characterBehaviour.OnFear(6);
+			characterBehaviour.OnFear(4);
 		}
 		yield return new WaitForSeconds(0.5f);
 		_ghost.GetComponent<SpriteRenderer>().DOFade(0f, 1f);

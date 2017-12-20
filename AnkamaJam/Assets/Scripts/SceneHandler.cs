@@ -9,7 +9,7 @@ public class SceneHandler : MonoBehaviour
     public static SceneHandler Instance;
 
     public const string StartScene = "Scenes/Start";
-    public const string Game = "Scenes/Game2";
+    public const string Game = "Scenes/Game 2";
     public const string GameOver = "Scenes/GameOver";
 
     public static bool LoadingScene;
