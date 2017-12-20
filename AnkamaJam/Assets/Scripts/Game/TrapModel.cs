@@ -12,7 +12,7 @@ public abstract class TrapModel : MonoBehaviour
     [SerializeField] private float m_delayMax;
     [SerializeField] public List<TrapModel> m_evolutions;
     [SerializeField] private List<Animator> m_animator;
-    [SerializeField] private TrapAOE m_aoe = TrapAOE.Point;
+    [SerializeField] protected TrapAOE m_aoe = TrapAOE.Point;
     [SerializeField] private TrapAOE m_blockAOE = TrapAOE.Point;
     [SerializeField] private int m_souls;
     [SerializeField] private bool m_automatic = true;
@@ -81,7 +81,7 @@ public abstract class TrapModel : MonoBehaviour
         return Helper.PositionsFromAOE(m_blockAOE, pos);
     }
 
-    public abstract void Activate(CharacterBehaviour c, bool evolved);
+    public abstract void Activate(CharacterBehaviour c, bool evolved, Vector2Int position = new Vector2Int(), Vector2Int targetPosition = new Vector2Int());
 
     public List<Animator> Animators
     {

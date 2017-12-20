@@ -102,7 +102,7 @@ public class Trap : MonoBehaviour
 
         foreach (var characterBehaviour in charactersInTrap)
         {
-            m_model.Activate(characterBehaviour, Evolved);
+            m_model.Activate(characterBehaviour, Evolved, Position, characterBehaviour.PositionInt);
         }
 
         m_model.Animators.ForEach(a => a.SetTrigger("TriggerTrap"));

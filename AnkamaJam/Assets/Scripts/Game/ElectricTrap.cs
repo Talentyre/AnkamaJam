@@ -6,7 +6,7 @@ public class ElectricTrap : DamageTrap
 {
     public List<GameObject> ElectricFXs = new List<GameObject>();
 
-    public override void Activate(CharacterBehaviour character, bool evolved)
+    public override void Activate(CharacterBehaviour character, bool evolved, Vector2Int position, Vector2Int targetPosition)
     {
         for (int i = 0; i < Random.Range(6, 10); i++)
         {

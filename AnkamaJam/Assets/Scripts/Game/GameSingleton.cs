@@ -101,7 +101,7 @@ public class GameSingleton : MonoBehaviour
     private const float ComboBaseDuration = 3;
     private float _comboDuration;
 
-    private const float SoulGainBaseDuration = 10;
+    private const float SoulGainBaseDuration = 0.5f;
     private float _soulGainDuration;
     private Trap _trapActivated;
 
