@@ -7,6 +7,7 @@ using DG.Tweening;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 using Object = UnityEngine.Object;
+using DG.Tweening.Plugins.Options;
 
 public class GameSingleton : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class GameSingleton : MonoBehaviour
 
     public Tilemap TrapTilemap;
 
-    public const long MaxAlert = 100;
+    public const long MaxAlert = 10;
     private long _alert;
 
     public long Alert
@@ -377,7 +378,12 @@ public class GameSingleton : MonoBehaviour
 
     public void BeginDrag(bool drag)
     {
-        TrapTilemap.color = drag ? Color.white : new Color(1f, 1f, 1f, 0f);
+        if (drag)
+            DOTween.To(() => TrapTilemap.color, (c) => TrapTilemap.color = c, Color.white, 0.2f);
+        else
+            DOTween.To(() => TrapTilemap.color, (c) => TrapTilemap.color = c, new Color(1f, 1f, 1f, 0f), 0.2f);
+
+        //TrapTilemap.color = drag ? Color.white : new Color(1f, 1f, 1f, 0f);
         foreach (var trap in m_traps)
         {
             if (drag)
