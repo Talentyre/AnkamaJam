@@ -195,7 +195,7 @@ public class GameSingleton : MonoBehaviour
             return;
         if (IsGameOver)
         {
-            OnGameOver();
+            OnGameOver(false);
             return;
         }
 
@@ -205,7 +205,7 @@ public class GameSingleton : MonoBehaviour
                 WaveManager.StartNextWave();
             else
             {
-                // Victoire ?
+                OnGameOver(true);
             }
         }
 
@@ -249,8 +249,9 @@ public class GameSingleton : MonoBehaviour
         }
     }
 
-    private void OnGameOver()
+    private void OnGameOver(bool victory)
     {
+        GameOverScript.Victory = victory;
         _gameOverLaunched = true;
 
         // todo score et compagnie !
@@ -387,7 +388,6 @@ public class GameSingleton : MonoBehaviour
         else
             DOTween.To(() => TrapTilemap.color, (c) => TrapTilemap.color = c, new Color(1f, 1f, 1f, 0f), 0.2f);
 
-        //TrapTilemap.color = drag ? Color.white : new Color(1f, 1f, 1f, 0f);
         foreach (var trap in m_traps)
         {
             if (drag)
