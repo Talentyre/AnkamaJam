@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using UnityEngine;
 
 public class Lightning : MonoBehaviour {
-	private SpriteRenderer _spriteRenderer;
+	private List<SpriteRenderer> _spriteRenderers;
 
 	private List<Ease> LightningEase = new List<Ease>
 	{
@@ -16,8 +17,8 @@ public class Lightning : MonoBehaviour {
 
 	void Start ()
 	{
-		_spriteRenderer = GetComponent<SpriteRenderer>();
-		_spriteRenderer.color = new Color(1f, 1f, 1f, 0f);
+		_spriteRenderers = GetComponentsInChildren<SpriteRenderer>().ToList();
+		_spriteRenderers.ForEach(s => s.color = new Color(1f, 1f, 1f, 0f));
 		StartCoroutine(Action());
 	}
 
@@ -32,7 +33,7 @@ public class Lightning : MonoBehaviour {
 				amplitude++;
 
 			var ease = LightningEase[Helper.random(LightningEase.Count)];
-			_spriteRenderer.DOColor(Color.white, Random.Range(0.7f,1.2f)).SetEase(ease, amplitude, 1);
+			_spriteRenderers.ForEach(s => s.DOColor(Color.white, Random.Range(0.7f,1.2f)).SetEase(ease, amplitude, 1));
 		}
 	}
 }
